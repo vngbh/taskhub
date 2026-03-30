@@ -7,6 +7,14 @@ type AuthPayload {
   user: User!
 }
 
+input CreateTaskInput {
+  deadline: DateTime
+  description: String
+  priority: Priority
+  status: TaskStatus
+  title: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -18,8 +26,12 @@ input LoginInput {
 }
 
 type Mutation {
+  createTask(input: CreateTaskInput!): Task!
+  deleteTask(id: ID!): Boolean!
   login(input: LoginInput!): AuthPayload!
   register(input: RegisterInput!): AuthPayload!
+  updateTask(input: UpdateTaskInput!): Task!
+  updateTaskStatus(input: UpdateTaskStatusInput!): Task!
 }
 
 enum Priority {
@@ -31,7 +43,7 @@ enum Priority {
 type Query {
   me: User!
   task(id: ID!): Task
-  tasks: [Task!]!
+  tasks(filter: TaskFilterInput): [Task!]!
   user(id: ID!): User
   users: [User!]!
 }
@@ -59,10 +71,31 @@ type Task {
   userId: String!
 }
 
+input TaskFilterInput {
+  deadlineAfter: DateTime
+  deadlineBefore: DateTime
+  priority: Priority
+  status: TaskStatus
+}
+
 enum TaskStatus {
   DONE
   IN_PROGRESS
   TODO
+}
+
+input UpdateTaskInput {
+  deadline: DateTime
+  description: String
+  id: ID!
+  priority: Priority
+  status: TaskStatus
+  title: String
+}
+
+input UpdateTaskStatusInput {
+  id: ID!
+  status: TaskStatus!
 }
 
 type User {
