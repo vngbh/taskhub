@@ -1,0 +1,23 @@
+# dependencies
+node_modules
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+
+# turbo
+.turbo
+
+# next
+.next
+out
+
+# nest
+dist
+
+# misc
+.DS_Store
