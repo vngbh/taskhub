@@ -2,10 +2,25 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AuthPayload {
+  accessToken: String!
+  user: User!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  login(input: LoginInput!): AuthPayload!
+  register(input: RegisterInput!): AuthPayload!
+}
 
 enum Priority {
   HIGH
@@ -14,10 +29,17 @@ enum Priority {
 }
 
 type Query {
+  me: User!
   task(id: ID!): Task
   tasks: [Task!]!
   user(id: ID!): User
   users: [User!]!
+}
+
+input RegisterInput {
+  email: String!
+  name: String!
+  password: String!
 }
 
 enum Role {
