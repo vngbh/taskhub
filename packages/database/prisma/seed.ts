@@ -13,13 +13,14 @@ async function main() {
   await prisma.user.deleteMany();
 
   const SALT_ROUNDS = 10;
+  const DEFAULT_PASSWORD = await bcrypt.hash("password123", SALT_ROUNDS);
 
   // 1. Create admin
   const adminData = createAdmin({ email: "admin@taskhub.dev", name: "Admin" });
   const admin = await prisma.user.create({
     data: {
       ...adminData,
-      password: await bcrypt.hash(adminData.password, SALT_ROUNDS),
+      password: DEFAULT_PASSWORD,
     },
   });
   console.log(`✅ Admin created: ${admin.email}`);
@@ -38,7 +39,7 @@ async function main() {
       prisma.user.create({
         data: {
           ...u,
-          password: await bcrypt.hash(u.password, SALT_ROUNDS),
+          password: DEFAULT_PASSWORD,
         },
       }),
     ),

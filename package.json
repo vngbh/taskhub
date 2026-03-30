@@ -20,6 +20,8 @@
   },
   "scripts": {
     "dev": "turbo run dev",
+    "api": "yarn workspace @taskhub/api dev",
+    "web": "yarn workspace @taskhub/web dev",
     "build": "turbo run build",
     "seed": "turbo run seed"
   },
