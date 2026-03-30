@@ -6,6 +6,8 @@
     "deleteOutDir": true,
     "plugins": ["@nestjs/graphql/plugin"],
     "webpack": false,
-    "tsConfigPath": "tsconfig.build.json"
+    "tsConfigPath": "tsconfig.build.json",
+    "builder": "tsc",
+    "typeCheck": true
   }
 }
