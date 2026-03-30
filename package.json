@@ -19,11 +19,15 @@
     ]
   },
   "scripts": {
-    "dev": "yarn workspace @taskhub/database db:deploy && turbo run dev",
+    "dev": "turbo run dev",
     "api": "yarn workspace @taskhub/api dev",
     "web": "yarn workspace @taskhub/web dev",
     "build": "turbo run build",
-    "seed": "turbo run seed"
+    "seed": "yarn workspace @taskhub/database seed",
+    "prisma:migrate": "yarn workspace @taskhub/database db:migrate",
+    "prisma:generate": "yarn workspace @taskhub/database db:generate",
+    "prisma:deploy": "yarn workspace @taskhub/database db:deploy",
+    "prisma:studio": "yarn workspace @taskhub/database db:studio"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
