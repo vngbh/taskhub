@@ -1,0 +1,53 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum Priority {
+  HIGH
+  LOW
+  MEDIUM
+}
+
+type Query {
+  task(id: ID!): Task
+  tasks: [Task!]!
+  user(id: ID!): User
+  users: [User!]!
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+type Task {
+  createdAt: DateTime!
+  deadline: DateTime
+  description: String
+  id: ID!
+  priority: Priority!
+  status: TaskStatus!
+  title: String!
+  updatedAt: DateTime!
+  userId: String!
+}
+
+enum TaskStatus {
+  DONE
+  IN_PROGRESS
+  TODO
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  name: String!
+  role: Role!
+  updatedAt: DateTime!
+}
