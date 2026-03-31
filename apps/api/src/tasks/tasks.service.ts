@@ -9,17 +9,18 @@ import { UpdateTaskInput } from '@/tasks/dto/update-task.input';
 import { UpdateTaskStatusInput } from '@/tasks/dto/update-task-status.input';
 import { TaskFilterInput } from '@/tasks/dto/task-filter.input';
 import { TaskStatus, Priority } from '@/tasks/entities/task.entity';
+import type { Task } from '@taskhub/database';
 import {
   Prisma,
   TaskStatus as PrismaTaskStatus,
   Priority as PrismaPriority,
-} from '@prisma/client';
+} from '@taskhub/database';
 
 @Injectable()
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(userId: string, filter?: TaskFilterInput) {
+  findAll(userId: string, filter?: TaskFilterInput): Promise<Task[]> {
     const where: Prisma.TaskWhereInput = { userId };
 
     if (filter?.status)
@@ -39,14 +40,14 @@ export class TasksService {
     return this.prisma.task.findMany({ where, orderBy: { createdAt: 'desc' } });
   }
 
-  async findById(id: string, userId: string) {
+  async findById(id: string, userId: string): Promise<Task> {
     const task = await this.prisma.task.findUnique({ where: { id } });
     if (!task) throw new NotFoundException('Task not found');
     if (task.userId !== userId) throw new ForbiddenException('Access denied');
     return task;
   }
 
-  create(userId: string, input: CreateTaskInput) {
+  create(userId: string, input: CreateTaskInput): Promise<Task> {
     return this.prisma.task.create({
       data: {
         ...input,
@@ -59,13 +60,16 @@ export class TasksService {
     });
   }
 
-  async update(userId: string, input: UpdateTaskInput) {
+  async update(userId: string, input: UpdateTaskInput): Promise<Task> {
     await this.findById(input.id, userId);
     const { id, ...data } = input;
     return this.prisma.task.update({ where: { id }, data });
   }
 
-  async updateStatus(userId: string, input: UpdateTaskStatusInput) {
+  async updateStatus(
+    userId: string,
+    input: UpdateTaskStatusInput,
+  ): Promise<Task> {
     await this.findById(input.id, userId);
     return this.prisma.task.update({
       where: { id: input.id },

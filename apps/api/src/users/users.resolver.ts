@@ -1,18 +1,21 @@
 import { Resolver, Query, Args, ID } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
+import type { User as PrismaUser } from '@taskhub/database';
 
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => [User], { name: 'users' })
-  findAll() {
+  findAll(): Promise<PrismaUser[]> {
     return this.usersService.findAll();
   }
 
   @Query(() => User, { name: 'user', nullable: true })
-  findOne(@Args('id', { type: () => ID }) id: string) {
+  findOne(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<PrismaUser | null> {
     return this.usersService.findById(id);
   }
 }

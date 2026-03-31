@@ -9,6 +9,7 @@ import { TaskFilterInput } from '@/tasks/dto/task-filter.input';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { User } from '@/users/entities/user.entity';
+import type { Task as PrismaTask } from '@taskhub/database';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Task)
@@ -20,7 +21,7 @@ export class TasksResolver {
     @CurrentUser() user: User,
     @Args('filter', { type: () => TaskFilterInput, nullable: true })
     filter?: TaskFilterInput,
-  ) {
+  ): Promise<PrismaTask[]> {
     return this.tasksService.findAll(user.id, filter);
   }
 
@@ -28,12 +29,15 @@ export class TasksResolver {
   findOne(
     @Args('id', { type: () => ID }) id: string,
     @CurrentUser() user: User,
-  ) {
+  ): Promise<PrismaTask | null> {
     return this.tasksService.findById(id, user.id);
   }
 
   @Mutation(() => Task)
-  createTask(@Args('input') input: CreateTaskInput, @CurrentUser() user: User) {
+  createTask(
+    @Args('input') input: CreateTaskInput,
+    @CurrentUser() user: User,
+  ): Promise<PrismaTask> {
     return this.tasksService.create(user.id, input);
   }
 
