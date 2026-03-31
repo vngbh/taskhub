@@ -20,7 +20,6 @@
     ]
   },
   "scripts": {
-    "up": "docker compose up -d --wait && turbo run dev --filter=@taskhub/api",
     "dev": "turbo run dev --filter=@taskhub/web",
     "dev:all": "turbo run dev",
     "api": "turbo run dev --filter=@taskhub/api",

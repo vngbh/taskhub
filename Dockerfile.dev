@@ -1,0 +1,13 @@
+FROM node:22
+
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+COPY apps/api/package.json ./apps/api/
+COPY packages/database/package.json ./packages/database/
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn prisma:generate

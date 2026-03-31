@@ -2,7 +2,6 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: taskhub_postgres
-    restart: unless-stopped
     environment:
       POSTGRES_USER: taskhub
       POSTGRES_PASSWORD: taskhub
@@ -10,12 +9,24 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - taskhub_pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U taskhub"]
-      interval: 3s
-      timeout: 3s
-      retries: 5
+      - ./tmp/db:/var/lib/postgresql/data
+
+  api:
+    container_name: taskhub_api
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    tty: true
+    command: yarn workspace @taskhub/api dev
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.container
+    depends_on:
+      - postgres
 
 volumes:
   taskhub_pgdata:
