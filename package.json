@@ -24,11 +24,14 @@
     "api": "yarn workspace @taskhub/api dev",
     "web": "yarn workspace @taskhub/web dev",
     "build": "turbo run build",
-    "seed": "yarn workspace @taskhub/database seed",
-    "prisma:migrate": "yarn workspace @taskhub/database db:migrate",
-    "prisma:generate": "yarn workspace @taskhub/database db:generate",
-    "prisma:deploy": "yarn workspace @taskhub/database db:deploy",
-    "prisma:studio": "yarn workspace @taskhub/database db:studio"
+    "prisma:generate": "yarn workspace @taskhub/database prisma:generate",
+    "prisma:migrate": "yarn workspace @taskhub/database prisma:migrate",
+    "prisma:migrate:create": "yarn workspace @taskhub/database prisma:migrate:create",
+    "prisma:reset": "yarn workspace @taskhub/database prisma:reset",
+    "prisma:push": "yarn workspace @taskhub/database prisma:push",
+    "prisma:deploy": "yarn workspace @taskhub/database prisma:deploy",
+    "prisma:studio": "yarn workspace @taskhub/database prisma:studio",
+    "seed": "yarn workspace @taskhub/database prisma:seed"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
