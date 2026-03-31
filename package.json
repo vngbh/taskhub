@@ -20,9 +20,11 @@
     ]
   },
   "scripts": {
-    "dev": "turbo run dev",
-    "api": "yarn workspace @taskhub/api dev",
-    "web": "yarn workspace @taskhub/web dev",
+    "up": "docker compose up -d --wait && turbo run dev --filter=@taskhub/api",
+    "dev": "turbo run dev --filter=@taskhub/web",
+    "dev:all": "turbo run dev",
+    "api": "turbo run dev --filter=@taskhub/api",
+    "web": "turbo run dev --filter=@taskhub/web",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test",
