@@ -6,7 +6,8 @@ import { CreateTaskDialog } from "@/app/(dashboard)/dashboard/tasks/CreateTaskDi
 import { TaskItem } from "@/app/(dashboard)/dashboard/tasks/TaskItem";
 import { TaskFilters } from "@/app/(dashboard)/dashboard/tasks/TaskFilters";
 import { TaskPagination } from "@/app/(dashboard)/dashboard/tasks/TaskPagination";
-import type { GetTasksQuery } from "@/graphql/generated";
+import type { GetTasksQuery, TaskFilterInput } from "@/graphql/generated";
+import { Priority, TaskStatus, SortBy, SortOrder } from "@/graphql/generated";
 
 type Task = GetTasksQuery["tasks"][number];
 
@@ -28,11 +29,11 @@ export default async function TasksPage({
   const sortBy = rawSortBy || undefined;
   const sortOrder = rawSortOrder || undefined;
 
-  const filter = {
-    ...(status && { status }),
-    ...(priority && { priority }),
-    ...(sortBy && { sortBy }),
-    ...(sortOrder && { sortOrder }),
+  const filter: TaskFilterInput = {
+    ...(status && { status: status as TaskStatus }),
+    ...(priority && { priority: priority as Priority }),
+    ...(sortBy && { sortBy: sortBy as SortBy }),
+    ...(sortOrder && { sortOrder: sortOrder as SortOrder }),
   };
 
   let tasks: Task[] = [];

@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/session";
 import { getSdkClient } from "@/lib/graphql";
 import { redirect } from "next/navigation";
+import type { GetMeQuery } from "@/graphql/generated";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -8,17 +9,12 @@ export default async function ProfilePage() {
   const token = await getSession();
   if (!token) redirect("/login");
 
-  let user: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    createdAt: string;
-  } | null = null;
+  type UserData = GetMeQuery["me"];
+  let user: UserData | null = null;
 
   try {
     const data = await getSdkClient(token).GetMe();
-    user = data.me as typeof user;
+    user = data.me;
   } catch {
     // API down or expired
   }

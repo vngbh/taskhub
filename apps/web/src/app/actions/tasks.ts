@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Priority, TaskStatus } from "@/graphql/generated";
 import { getSdkClient } from "@/lib/graphql";
 import { getSession } from "@/lib/session";
 
@@ -16,7 +17,8 @@ export async function createTask(
   const title = (formData.get("title") as string)?.trim();
   const description =
     (formData.get("description") as string)?.trim() || undefined;
-  const priority = (formData.get("priority") as string) || "MEDIUM";
+  const priority = ((formData.get("priority") as string) ||
+    "MEDIUM") as Priority;
   const deadlineRaw = formData.get("deadline") as string | null;
   const deadline = deadlineRaw
     ? new Date(deadlineRaw).toISOString()
@@ -61,8 +63,12 @@ export async function updateTask(
   const title = (formData.get("title") as string)?.trim();
   const description =
     (formData.get("description") as string)?.trim() || undefined;
-  const priority = (formData.get("priority") as string) || undefined;
-  const status = (formData.get("status") as string) || undefined;
+  const priority = ((formData.get("priority") as string) || undefined) as
+    | Priority
+    | undefined;
+  const status = ((formData.get("status") as string) || undefined) as
+    | TaskStatus
+    | undefined;
   const deadlineRaw = formData.get("deadline") as string | null;
   const deadline = deadlineRaw
     ? new Date(deadlineRaw).toISOString()
@@ -89,7 +95,7 @@ export async function updateTaskStatus(id: string, status: string) {
 
   try {
     await getSdkClient(token).UpdateTaskStatus({
-      input: { id, status },
+      input: { id, status: status as TaskStatus },
     });
   } catch {
     // ignore

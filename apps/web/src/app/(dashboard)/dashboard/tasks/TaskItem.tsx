@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 type Task = {
   id: string;
   title: string;
-  description?: string;
+  description?: string | null;
   status: string;
   priority: string;
   deadline?: string;
