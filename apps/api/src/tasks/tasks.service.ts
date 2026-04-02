@@ -9,6 +9,7 @@ import { UpdateTaskInput } from '@/tasks/dto/update-task.input';
 import { UpdateTaskStatusInput } from '@/tasks/dto/update-task-status.input';
 import { TaskFilterInput } from '@/tasks/dto/task-filter.input';
 import { TaskStatus, Priority } from '@/tasks/entities/task.entity';
+import { TaskStats } from '@/tasks/entities/task-stats.entity';
 import type { Task } from '@taskhub/database';
 import {
   Prisma,
@@ -81,5 +82,21 @@ export class TasksService {
     await this.findById(id, userId);
     await this.prisma.task.delete({ where: { id } });
     return true;
+  }
+
+  async getStats(userId: string): Promise<TaskStats> {
+    const [todo, inProgress, done, overdue] = await Promise.all([
+      this.prisma.task.count({ where: { userId, status: 'TODO' } }),
+      this.prisma.task.count({ where: { userId, status: 'IN_PROGRESS' } }),
+      this.prisma.task.count({ where: { userId, status: 'DONE' } }),
+      this.prisma.task.count({
+        where: {
+          userId,
+          status: { not: 'DONE' },
+          deadline: { lt: new Date() },
+        },
+      }),
+    ]);
+    return { total: todo + inProgress + done, todo, inProgress, done, overdue };
   }
 }
