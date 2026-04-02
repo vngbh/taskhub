@@ -1,8 +1,8 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { TasksService } from './tasks.service';
-import { Task } from './entities/task.entity';
-import { TaskStats } from './entities/task-stats.entity';
+import { TasksService } from '@/tasks/tasks.service';
+import { Task } from '@/tasks/entities/task.entity';
+import { TaskStats } from '@/tasks/entities/task-stats.entity';
 import { CreateTaskInput } from '@/tasks/dto/create-task.input';
 import { UpdateTaskInput } from '@/tasks/dto/update-task.input';
 import { UpdateTaskStatusInput } from '@/tasks/dto/update-task-status.input';

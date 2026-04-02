@@ -1,6 +1,6 @@
 import { Resolver, Query, Args, ID } from '@nestjs/graphql';
-import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
+import { UsersService } from '@/users/users.service';
+import { User } from '@/users/entities/user.entity';
 import type { User as PrismaUser } from '@prisma/client';
 
 @Resolver(() => User)
