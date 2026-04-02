@@ -2,8 +2,8 @@ import { gql } from "graphql-request";
 import { getSession } from "@/lib/session";
 import { getClient } from "@/lib/graphql";
 import { redirect } from "next/navigation";
-import { CreateTaskDialog } from "./CreateTaskDialog";
-import { TaskItem } from "./TaskItem";
+import { CreateTaskDialog } from "@/app/(dashboard)/dashboard/tasks/CreateTaskDialog";
+import { TaskItem } from "@/app/(dashboard)/dashboard/tasks/TaskItem";
 
 const TASKS_QUERY = gql`
   query {

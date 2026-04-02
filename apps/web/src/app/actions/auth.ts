@@ -78,16 +78,14 @@ export async function register(
     return { error: "Password does not meet security requirements." };
 
   try {
-    const data = await getClient().request<{
+    await getClient().request<{
       register: { accessToken: string };
     }>(REGISTER_MUTATION, { input: { name, email, password } });
-
-    await createSession(data.register.accessToken);
   } catch {
     return { error: "Registration failed. Email may already be in use." };
   }
 
-  redirect("/dashboard");
+  redirect("/login");
 }
 
 export async function logout() {
