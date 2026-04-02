@@ -214,6 +214,11 @@ export type UpdateTaskStatusMutationVariables = Exact<{
 
 export type UpdateTaskStatusMutation = { __typename?: 'Mutation', updateTaskStatus: { __typename?: 'Task', id: string } };
 
+export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, name: string, email: string, role: Role, createdAt: any } };
+
 export type GetTaskStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -270,6 +275,17 @@ export const UpdateTaskStatusDocument = gql`
   }
 }
     `;
+export const GetMeDocument = gql`
+    query GetMe {
+  me {
+    id
+    name
+    email
+    role
+    createdAt
+  }
+}
+    `;
 export const GetTaskStatsDocument = gql`
     query GetTaskStats {
   taskStats {
@@ -316,6 +332,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UpdateTaskStatus(variables: UpdateTaskStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateTaskStatusMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateTaskStatusMutation>({ document: UpdateTaskStatusDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateTaskStatus', 'mutation', variables);
+    },
+    GetMe(variables?: GetMeQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMeQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetMeQuery>({ document: GetMeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMe', 'query', variables);
     },
     GetTaskStats(variables?: GetTaskStatsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetTaskStatsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTaskStatsQuery>({ document: GetTaskStatsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetTaskStats', 'query', variables);

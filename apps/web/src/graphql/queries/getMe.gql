@@ -1,0 +1,9 @@
+query GetMe {
+  me {
+    id
+    name
+    email
+    role
+    createdAt
+  }
+}
