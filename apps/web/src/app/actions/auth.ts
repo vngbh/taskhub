@@ -57,6 +57,9 @@ export async function login(
   redirect("/dashboard");
 }
 
+const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
 export async function register(
   _state: AuthState,
   formData: FormData,
@@ -64,9 +67,15 @@ export async function register(
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const confirm = formData.get("confirm") as string;
 
   if (!name || !email || !password)
     return { error: "All fields are required." };
+
+  if (password !== confirm) return { error: "Passwords do not match." };
+
+  if (!PASSWORD_REGEX.test(password))
+    return { error: "Password does not meet security requirements." };
 
   try {
     const data = await getClient().request<{

@@ -2,6 +2,11 @@
 
 import { useTransition } from "react";
 import { deleteTask, updateTaskStatus } from "@/app/actions/tasks";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Task = {
   id: string;
@@ -22,10 +27,10 @@ const STATUS_LABELS: Record<string, string> = {
   DONE: "Done",
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  TODO: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
-  IN_PROGRESS: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
-  DONE: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
+const STATUS_VARIANTS: Record<string, "outline" | "secondary" | "default"> = {
+  TODO: "outline",
+  IN_PROGRESS: "secondary",
+  DONE: "default",
 };
 
 const PRIORITY_LABELS: Record<string, string> = {
@@ -34,10 +39,10 @@ const PRIORITY_LABELS: Record<string, string> = {
   HIGH: "High",
 };
 
-const PRIORITY_COLORS: Record<string, string> = {
-  LOW: "text-zinc-400",
-  MEDIUM: "text-yellow-500",
-  HIGH: "text-red-500",
+const PRIORITY_VARIANTS: Record<string, "outline" | "secondary" | "destructive"> = {
+  LOW: "outline",
+  MEDIUM: "secondary",
+  HIGH: "destructive",
 };
 
 function isOverdue(deadline?: string, status?: string) {
@@ -50,9 +55,7 @@ export function TaskItem({ task }: { task: Task }) {
 
   const currentIdx = STATUS_SEQUENCE.indexOf(task.status as TaskStatus);
   const nextStatus =
-    STATUS_SEQUENCE[
-      (currentIdx === -1 ? 1 : currentIdx + 1) % STATUS_SEQUENCE.length
-    ];
+    STATUS_SEQUENCE[(currentIdx === -1 ? 1 : currentIdx + 1) % STATUS_SEQUENCE.length];
 
   const overdue = isOverdue(task.deadline, task.status);
 
@@ -66,94 +69,74 @@ export function TaskItem({ task }: { task: Task }) {
   }
 
   return (
-    <li
-      className={`rounded-xl border bg-white p-4 transition-opacity dark:bg-zinc-950 ${
-        overdue
-          ? "border-red-300 dark:border-red-800"
-          : "border-zinc-200 dark:border-zinc-800"
-      } ${isPending ? "opacity-40" : ""}`}
+    <Card
+      className={cn(
+        "gap-2 py-4 transition-opacity",
+        overdue && "border-destructive/50",
+        isPending && "opacity-40",
+      )}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
+      <CardContent className="px-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
             <p
-              className={`font-medium text-zinc-900 dark:text-zinc-50 truncate ${
-                task.status === "DONE" ? "line-through opacity-40" : ""
-              }`}
+              className={cn(
+                "font-medium truncate",
+                task.status === "DONE" && "line-through text-muted-foreground",
+              )}
             >
               {task.title}
             </p>
-            {overdue && (
-              <span className="shrink-0 rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-600 dark:bg-red-900/40 dark:text-red-400">
-                Overdue
-              </span>
+            {task.description && (
+              <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+                {task.description}
+              </p>
+            )}
+            {task.deadline && (
+              <p className={cn("mt-1.5 text-xs", overdue ? "text-destructive font-medium" : "text-muted-foreground")}>
+                Due {new Date(task.deadline).toLocaleDateString()}
+              </p>
             )}
           </div>
-          {task.description && (
-            <p className="mt-1 text-sm text-zinc-500 line-clamp-2">
-              {task.description}
-            </p>
-          )}
-        </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <span
-            className={`text-xs font-medium ${PRIORITY_COLORS[task.priority] ?? ""}`}
-            title="Priority"
-          >
-            {PRIORITY_LABELS[task.priority] ?? task.priority}
-          </span>
+          <div className="flex shrink-0 items-center gap-2">
+            {overdue && (
+              <Badge variant="destructive" className="text-[10px]">Overdue</Badge>
+            )}
 
-          <button
-            onClick={handleStatusCycle}
-            disabled={isPending}
-            title={
-              task.status === "DONE"
-                ? "Click to reset to To Do"
-                : `Click to advance to ${STATUS_LABELS[nextStatus]}`
-            }
-            className={`rounded-full px-2 py-0.5 text-xs font-medium transition-opacity hover:opacity-70 disabled:cursor-not-allowed ${STATUS_COLORS[task.status] ?? ""}`}
-          >
-            {STATUS_LABELS[task.status] ?? task.status}
-          </button>
+            <Badge variant={PRIORITY_VARIANTS[task.priority] ?? "outline"}>
+              {PRIORITY_LABELS[task.priority] ?? task.priority}
+            </Badge>
 
-          <button
-            onClick={handleDelete}
-            disabled={isPending}
-            title="Delete task"
-            className="text-zinc-400 transition-colors hover:text-red-500 disabled:cursor-not-allowed"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+            <Badge
+              variant={STATUS_VARIANTS[task.status] ?? "outline"}
+              onClick={handleStatusCycle}
+              className={cn(
+                "cursor-pointer select-none transition-opacity hover:opacity-70",
+                isPending && "cursor-not-allowed",
+              )}
+              title={
+                task.status === "DONE"
+                  ? "Click to reset to To Do"
+                  : `Click to advance to ${STATUS_LABELS[nextStatus]}`
+              }
             >
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-              <path d="M10 11v6" />
-              <path d="M14 11v6" />
-              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-            </svg>
-          </button>
-        </div>
-      </div>
+              {STATUS_LABELS[task.status] ?? task.status}
+            </Badge>
 
-      {task.deadline && (
-        <p
-          className={`mt-2 text-xs ${
-            overdue ? "text-red-500 dark:text-red-400" : "text-zinc-400"
-          }`}
-        >
-          Due {new Date(task.deadline).toLocaleDateString()}
-        </p>
-      )}
-    </li>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-muted-foreground hover:text-destructive"
+              onClick={handleDelete}
+              disabled={isPending}
+              title="Delete task"
+            >
+              <Trash2 size={14} />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

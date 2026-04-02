@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { logout } from "@/app/actions/auth";
 import { NavLinks } from "./NavLinks";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardLayout({
   children,
@@ -8,32 +9,34 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
-      <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+    <div className="min-h-screen bg-muted/40">
+      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
             <div className="flex items-center gap-2">
               <Image
                 src="/logo.svg"
                 alt="TaskHub logo"
-                width={24}
-                height={24}
+                width={22}
+                height={22}
                 loading="eager"
                 className="dark:invert"
               />
-              <span className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+              <span className="text-sm font-semibold tracking-tight">
                 TaskHub
               </span>
             </div>
             <NavLinks />
           </div>
           <form action={logout}>
-            <button
+            <Button
               type="submit"
-              className="rounded-md px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-900 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-50"
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
             >
               Sign out
-            </button>
+            </Button>
           </form>
         </div>
       </header>
