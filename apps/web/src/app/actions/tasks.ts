@@ -1,31 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { gql } from "graphql-request";
-import { getClient } from "@/lib/graphql";
+import { getSdkClient } from "@/lib/graphql";
 import { getSession } from "@/lib/session";
-
-const CREATE_TASK_MUTATION = gql`
-  mutation CreateTask($input: CreateTaskInput!) {
-    createTask(input: $input) {
-      id
-    }
-  }
-`;
-
-const DELETE_TASK_MUTATION = gql`
-  mutation DeleteTask($id: ID!) {
-    deleteTask(id: $id)
-  }
-`;
-
-const UPDATE_TASK_STATUS_MUTATION = gql`
-  mutation UpdateTaskStatus($input: UpdateTaskStatusInput!) {
-    updateTaskStatus(input: $input) {
-      id
-    }
-  }
-`;
 
 export type TaskFormState = { error?: string } | undefined;
 
@@ -48,7 +25,7 @@ export async function createTask(
   if (!title) return { error: "Title is required." };
 
   try {
-    await getClient(token).request(CREATE_TASK_MUTATION, {
+    await getSdkClient(token).CreateTask({
       input: { title, description, priority, deadline },
     });
   } catch {
@@ -63,7 +40,7 @@ export async function deleteTask(id: string) {
   if (!token) return;
 
   try {
-    await getClient(token).request(DELETE_TASK_MUTATION, { id });
+    await getSdkClient(token).DeleteTask({ id });
   } catch {
     // ignore — page will re-render regardless
   }
@@ -76,7 +53,7 @@ export async function updateTaskStatus(id: string, status: string) {
   if (!token) return;
 
   try {
-    await getClient(token).request(UPDATE_TASK_STATUS_MUTATION, {
+    await getSdkClient(token).UpdateTaskStatus({
       input: { id, status },
     });
   } catch {
