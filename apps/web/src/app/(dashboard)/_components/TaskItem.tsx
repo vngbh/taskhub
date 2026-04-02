@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { deleteTask, updateTaskStatus } from "@/app/actions/tasks";
-import { EditTaskDialog } from "@/components/custom/EditTaskDialog";
+import { EditTaskDialog } from "@/app/(dashboard)/_components/EditTaskDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

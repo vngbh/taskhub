@@ -1,4 +1,4 @@
-import { AppBranding } from "@/components/custom/AppBranding";
+import { AppBranding } from "@/app/(auth)/_components/AppBranding";
 
 export function AuthCard({ children }: { children: React.ReactNode }) {
   return (

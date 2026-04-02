@@ -47,8 +47,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { CreateTaskDialog } from "@/components/custom/CreateTaskDialog";
-import { EditTaskDialog } from "@/components/custom/EditTaskDialog";
+import { CreateTaskDialog } from "@/app/(dashboard)/_components/CreateTaskDialog";
+import { EditTaskDialog } from "@/app/(dashboard)/_components/EditTaskDialog";
 import { deleteTask } from "@/app/actions/tasks";
 import { cn } from "@/lib/utils";
 import {

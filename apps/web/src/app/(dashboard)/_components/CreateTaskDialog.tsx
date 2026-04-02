@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { createTask, type TaskFormState } from "@/app/actions/tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DatePicker } from "@/components/custom/DatePicker";
+import { DatePicker } from "@/components/shared/DatePicker";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -62,11 +62,7 @@ export function CreateTaskDialog() {
           </p>
         </DialogHeader>
 
-        <form
-          key={formKey}
-          action={formAction}
-          className="flex flex-col gap-4"
-        >
+        <form key={formKey} action={formAction} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ct-title">
               Title <span className="text-destructive">*</span>

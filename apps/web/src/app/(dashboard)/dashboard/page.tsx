@@ -6,7 +6,7 @@ import {
   TaskStatus,
   type GetTaskStatsQuery,
 } from "@/graphql/generated";
-import { TaskStatusChart } from "@/components/custom/TaskStatusChart";
+import { TaskStatusChart } from "@/app/(dashboard)/_components/TaskStatusChart";
 
 type TaskStats = GetTaskStatsQuery["taskStats"];
 

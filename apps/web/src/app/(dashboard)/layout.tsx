@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { NavLinks } from "@/components/custom/NavLinks";
+import { NavLinks } from "@/app/(dashboard)/_components/NavLinks";
 import { getSession } from "@/lib/session";
 import { getSdkClient } from "@/lib/graphql";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

@@ -5,7 +5,7 @@ import { Pencil } from "lucide-react";
 import { updateTask, type TaskFormState } from "@/app/actions/tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DatePicker } from "@/components/custom/DatePicker";
+import { DatePicker } from "@/components/shared/DatePicker";
 import { Label } from "@/components/ui/label";
 import {
   Select,

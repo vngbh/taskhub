@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { AuthCard } from "@/components/custom/AuthCard";
-import { TermsDialog } from "@/components/custom/TermsDialog";
-import { FormError, FieldError } from "@/components/custom/FormError";
+import { AuthCard } from "@/app/(auth)/_components/AuthCard";
+import { TermsDialog } from "@/app/(auth)/_components/TermsDialog";
+import { FormError, FieldError } from "@/components/shared/FormError";
 
 const RULES = [
   {

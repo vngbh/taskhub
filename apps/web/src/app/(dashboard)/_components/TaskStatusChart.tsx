@@ -6,7 +6,7 @@ import type { GetTaskStatsQuery } from "@/graphql/generated";
 import {
   TaskDonutCard,
   type DonutSlice,
-} from "@/components/custom/TaskDonutCard";
+} from "@/app/(dashboard)/_components/TaskDonutCard";
 
 type TaskStats = GetTaskStatsQuery["taskStats"];
 
