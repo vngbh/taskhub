@@ -182,12 +182,12 @@ export default function RegisterPage() {
           {pending ? "Registering…" : "Register"}
         </Button>
 
-        <p className="mt-4 text-center text-xs text-muted-foreground">
+        <p className="mt-4 text-center text-xs text-neutral-400">
           By clicking Register, you agree to our <TermsDialog />
         </p>
       </form>
 
-      <p className="mt-4 text-center text-xs text-muted-foreground">
+      <p className="mt-4 text-center text-xs text-neutral-400">
         Already have an account?{" "}
         <Link
           href="/login"

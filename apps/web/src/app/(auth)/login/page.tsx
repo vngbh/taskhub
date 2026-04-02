@@ -50,10 +50,10 @@ export default function LoginPage() {
         </Button>
       </form>
       <div className="mt-8">
-        <p className="mt-4 text-center text-xs text-muted-foreground">
+        <p className="mt-4 text-center text-xs text-neutral-400">
           By clicking Sign in, you agree to our <TermsDialog />
         </p>
-        <p className="mt-4 text-center text-xs text-muted-foreground">
+        <p className="mt-4 text-center text-xs text-neutral-400">
           Don&apos;t have an account?{" "}
           <Link
             href="/register"

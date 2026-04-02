@@ -21,7 +21,7 @@ export function TermsDialog() {
       <DialogPortal>
         <DialogOverlay />
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 p-4">
-          <DialogPrimitive.Content className="w-full max-w-lg rounded-lg border bg-background p-6 shadow-lg outline-none">
+          <DialogPrimitive.Content className="w-full max-w-lg rounded-lg border bg-background py-6 px-8 shadow-lg outline-none">
             <DialogPrimitive.Title className="text-center mb-6 font-semibold leading-none">
               Terms &amp; Conditions
             </DialogPrimitive.Title>
