@@ -29,7 +29,7 @@ A full-stack task management application built as a Turborepo monorepo. Users ca
 
 ## Overview
 
-TaskHub lets each authenticated user maintain their own task list. Key capabilities:
+taskhub lets each authenticated user maintain their own task list. Key capabilities:
 
 | Feature             | Details                                                                                                          |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------- |

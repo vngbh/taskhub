@@ -62,7 +62,10 @@ export async function updateTask(
   const id = formData.get("id") as string;
   const title = (formData.get("title") as string)?.trim();
   const description =
-    (formData.get("description") as string)?.trim() || undefined;
+    ((formData.get("description") as string)?.trim() || null) as
+      | string
+      | null
+      | undefined;
   const priority = ((formData.get("priority") as string) || undefined) as
     | Priority
     | undefined;
@@ -71,8 +74,8 @@ export async function updateTask(
     | undefined;
   const deadlineRaw = formData.get("deadline") as string | null;
   const deadline = deadlineRaw
-    ? new Date(deadlineRaw).toISOString()
-    : undefined;
+    ? (new Date(deadlineRaw).toISOString() as unknown as Date)
+    : null;
 
   if (!id) return { error: "Task ID is required." };
   if (!title) return { error: "Title is required." };

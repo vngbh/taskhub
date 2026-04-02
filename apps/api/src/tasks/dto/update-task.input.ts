@@ -1,23 +1,42 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
+import {
+  IsNotEmpty,
+  IsOptional,
+  MaxLength,
+  IsEnum,
+  IsDateString,
+} from 'class-validator';
 import { Priority, TaskStatus } from '@/tasks/entities/task.entity';
 
 @InputType()
 export class UpdateTaskInput {
   @Field(() => ID)
+  @IsNotEmpty()
   id!: string;
 
   @Field({ nullable: true })
+  @IsOptional()
+  @IsNotEmpty()
+  @MaxLength(200)
   title?: string;
 
-  @Field({ nullable: true })
-  description?: string;
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @MaxLength(500)
+  description?: string | null;
 
   @Field(() => TaskStatus, { nullable: true })
+  @IsOptional()
+  @IsEnum(TaskStatus)
   status?: TaskStatus;
 
   @Field(() => Priority, { nullable: true })
+  @IsOptional()
+  @IsEnum(Priority)
   priority?: Priority;
 
-  @Field({ nullable: true })
-  deadline?: Date;
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsDateString()
+  deadline?: Date | null;
 }

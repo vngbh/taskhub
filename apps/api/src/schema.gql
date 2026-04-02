@@ -46,8 +46,6 @@ type Query {
   taskStats: TaskStats!
   tasks(filter: TaskFilterInput, skip: Int, take: Int): [Task!]!
   tasksCount(filter: TaskFilterInput): Int!
-  user(id: ID!): User
-  users: [User!]!
 }
 
 input RegisterInput {
@@ -109,7 +107,7 @@ enum TaskStatus {
 }
 
 input UpdateTaskInput {
-  deadline: DateTime
+  deadline: String
   description: String
   id: ID!
   priority: Priority

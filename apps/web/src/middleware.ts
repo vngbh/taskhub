@@ -7,7 +7,7 @@ const encodedKey = new TextEncoder().encode(
 
 const PUBLIC_PATHS = ["/login", "/register"];
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("taskhub_token")?.value;
 
