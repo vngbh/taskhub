@@ -34,9 +34,7 @@ EXPOSE 4000
 
 WORKDIR /app/apps/api
 
-CMD ["sh", "-c", "/app/node_modules/.bin/prisma migrate deploy && node dist/main"]
-
-EXPOSE 4000
+CMD ["sh", "-c", "/app/node_modules/.bin/prisma migrate deploy && node dist/src/main"]
 
 WORKDIR /app/apps/api
 
