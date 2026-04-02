@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { deleteTask, updateTaskStatus } from "@/app/actions/tasks";
+import { EditTaskDialog } from "@/app/(dashboard)/dashboard/tasks/EditTaskDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -39,7 +40,10 @@ const PRIORITY_LABELS: Record<string, string> = {
   HIGH: "High",
 };
 
-const PRIORITY_VARIANTS: Record<string, "outline" | "secondary" | "destructive"> = {
+const PRIORITY_VARIANTS: Record<
+  string,
+  "outline" | "secondary" | "destructive"
+> = {
   LOW: "outline",
   MEDIUM: "secondary",
   HIGH: "destructive",
@@ -55,7 +59,9 @@ export function TaskItem({ task }: { task: Task }) {
 
   const currentIdx = STATUS_SEQUENCE.indexOf(task.status as TaskStatus);
   const nextStatus =
-    STATUS_SEQUENCE[(currentIdx === -1 ? 1 : currentIdx + 1) % STATUS_SEQUENCE.length];
+    STATUS_SEQUENCE[
+      (currentIdx === -1 ? 1 : currentIdx + 1) % STATUS_SEQUENCE.length
+    ];
 
   const overdue = isOverdue(task.deadline, task.status);
 
@@ -93,7 +99,14 @@ export function TaskItem({ task }: { task: Task }) {
               </p>
             )}
             {task.deadline && (
-              <p className={cn("mt-1.5 text-xs", overdue ? "text-destructive font-medium" : "text-muted-foreground")}>
+              <p
+                className={cn(
+                  "mt-1.5 text-xs",
+                  overdue
+                    ? "text-destructive font-medium"
+                    : "text-muted-foreground",
+                )}
+              >
                 Due {new Date(task.deadline).toLocaleDateString()}
               </p>
             )}
@@ -101,7 +114,9 @@ export function TaskItem({ task }: { task: Task }) {
 
           <div className="flex shrink-0 items-center gap-2">
             {overdue && (
-              <Badge variant="destructive" className="text-[10px]">Overdue</Badge>
+              <Badge variant="destructive" className="text-[10px]">
+                Overdue
+              </Badge>
             )}
 
             <Badge variant={PRIORITY_VARIANTS[task.priority] ?? "outline"}>
@@ -123,6 +138,8 @@ export function TaskItem({ task }: { task: Task }) {
             >
               {STATUS_LABELS[task.status] ?? task.status}
             </Badge>
+
+            <EditTaskDialog task={task} />
 
             <Button
               variant="ghost"
