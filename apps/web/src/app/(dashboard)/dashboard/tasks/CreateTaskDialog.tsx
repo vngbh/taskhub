@@ -1,26 +1,33 @@
 "use client";
 
-import { useRef, useActionState } from "react";
+import { useRef, useActionState, useState } from "react";
 import { createTask, type TaskFormState } from "@/app/actions/tasks";
 
 export function CreateTaskDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [formKey, setFormKey] = useState(0);
 
   const [state, formAction, pending] = useActionState(
     async (_prev: TaskFormState, formData: FormData) => {
       const result = await createTask(_prev, formData);
       if (!result?.error) {
         dialogRef.current?.close();
+        setFormKey((k) => k + 1); // reset form fields
       }
       return result;
     },
     undefined,
   );
 
+  function handleOpen() {
+    setFormKey((k) => k + 1); // clear previous values when re-opening
+    dialogRef.current?.showModal();
+  }
+
   return (
     <>
       <button
-        onClick={() => dialogRef.current?.showModal()}
+        onClick={handleOpen}
         className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
       >
         New task
@@ -34,7 +41,7 @@ export function CreateTaskDialog() {
           New task
         </h2>
 
-        <form action={formAction} className="flex flex-col gap-4">
+        <form key={formKey} action={formAction} className="flex flex-col gap-4">
           <div>
             <label
               htmlFor="ct-title"
