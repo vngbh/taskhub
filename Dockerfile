@@ -22,14 +22,11 @@ RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-COPY apps/api/package.json ./apps/api/
-
-RUN yarn install --frozen-lockfile --production
-
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY apps/api/prisma ./apps/api/prisma
+COPY package.json ./
+COPY apps/api/package.json ./apps/api/
 
 EXPOSE 4000
 
