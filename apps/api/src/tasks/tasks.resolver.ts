@@ -10,7 +10,7 @@ import { TaskFilterInput } from '@/tasks/dto/task-filter.input';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { User } from '@/users/entities/user.entity';
-import type { Task as PrismaTask } from '@taskhub/database';
+import type { Task as PrismaTask } from '@prisma/client';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Task)

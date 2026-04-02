@@ -10,12 +10,12 @@ import { UpdateTaskStatusInput } from '@/tasks/dto/update-task-status.input';
 import { TaskFilterInput } from '@/tasks/dto/task-filter.input';
 import { TaskStatus, Priority } from '@/tasks/entities/task.entity';
 import { TaskStats } from '@/tasks/entities/task-stats.entity';
-import type { Task } from '@taskhub/database';
+import type { Task } from '@prisma/client';
 import {
   Prisma,
   TaskStatus as PrismaTaskStatus,
   Priority as PrismaPriority,
-} from '@taskhub/database';
+} from '@prisma/client';
 
 @Injectable()
 export class TasksService {

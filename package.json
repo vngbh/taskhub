@@ -4,8 +4,7 @@
   "packageManager": "yarn@1.22.22",
   "workspaces": {
     "packages": [
-      "apps/*",
-      "packages/*"
+      "apps/*"
     ],
     "nohoist": [
       "**/@nestjs/apollo",
@@ -28,15 +27,15 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "prisma:generate": "yarn workspace @taskhub/database prisma:generate",
-    "prisma:migrate": "yarn workspace @taskhub/database prisma:migrate",
-    "prisma:migrate:create": "yarn workspace @taskhub/database prisma:migrate:create",
-    "prisma:reset": "yarn workspace @taskhub/database prisma:reset",
-    "prisma:push": "yarn workspace @taskhub/database prisma:push",
-    "prisma:deploy": "yarn workspace @taskhub/database prisma:deploy",
-    "prisma:studio": "yarn workspace @taskhub/database prisma:studio",
-    "prisma:seed": "yarn workspace @taskhub/database prisma:seed",
-    "seed": "yarn workspace @taskhub/database prisma:seed"
+    "prisma:generate": "yarn workspace @taskhub/api prisma:generate",
+    "prisma:migrate": "yarn workspace @taskhub/api prisma:migrate",
+    "prisma:migrate:create": "yarn workspace @taskhub/api prisma:migrate:create",
+    "prisma:reset": "yarn workspace @taskhub/api prisma:reset",
+    "prisma:push": "yarn workspace @taskhub/api prisma:push",
+    "prisma:deploy": "yarn workspace @taskhub/api prisma:deploy",
+    "prisma:studio": "yarn workspace @taskhub/api prisma:studio",
+    "prisma:seed": "yarn workspace @taskhub/api prisma:seed",
+    "seed": "yarn workspace @taskhub/api prisma:seed"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
