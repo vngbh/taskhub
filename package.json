@@ -26,6 +26,7 @@
     "web": "turbo run dev --filter=@taskhub/web",
     "build": "turbo run build",
     "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "prisma:generate": "yarn workspace @taskhub/database prisma:generate",
     "prisma:migrate": "yarn workspace @taskhub/database prisma:migrate",
