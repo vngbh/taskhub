@@ -1,7 +1,11 @@
 "use client";
 
 import { useRef, useActionState, useState } from "react";
+import { Plus } from "lucide-react";
 import { createTask, type TaskFormState } from "@/app/actions/tasks";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function CreateTaskDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -12,7 +16,7 @@ export function CreateTaskDialog() {
       const result = await createTask(_prev, formData);
       if (!result?.error) {
         dialogRef.current?.close();
-        setFormKey((k) => k + 1); // reset form fields
+        setFormKey((k) => k + 1);
       }
       return result;
     },
@@ -20,116 +24,95 @@ export function CreateTaskDialog() {
   );
 
   function handleOpen() {
-    setFormKey((k) => k + 1); // clear previous values when re-opening
+    setFormKey((k) => k + 1);
     dialogRef.current?.showModal();
   }
 
   return (
     <>
-      <button
-        onClick={handleOpen}
-        className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-      >
+      <Button onClick={handleOpen} size="sm">
+        <Plus size={16} />
         New task
-      </button>
+      </Button>
 
       <dialog
         ref={dialogRef}
-        className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-6 shadow-xl backdrop:bg-black/50 dark:border-zinc-800 dark:bg-zinc-950"
+        className="w-full max-w-md rounded-xl border bg-card text-card-foreground shadow-xl backdrop:bg-black/50 p-0"
       >
-        <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          New task
-        </h2>
+        <div className="p-6">
+          <h2 className="text-lg font-semibold mb-1">New task</h2>
+          <p className="text-sm text-muted-foreground mb-5">
+            Fill in the details below to create a task.
+          </p>
 
-        <form key={formKey} action={formAction} className="flex flex-col gap-4">
-          <div>
-            <label
-              htmlFor="ct-title"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="ct-title"
-              name="title"
-              type="text"
-              required
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="ct-description"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Description
-            </label>
-            <textarea
-              id="ct-description"
-              name="description"
-              rows={3}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label
-                htmlFor="ct-priority"
-                className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-              >
-                Priority
-              </label>
-              <select
-                id="ct-priority"
-                name="priority"
-                defaultValue="MEDIUM"
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-              >
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
-              </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="ct-deadline"
-                className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-              >
-                Deadline
-              </label>
-              <input
-                id="ct-deadline"
-                name="deadline"
-                type="date"
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          <form
+            key={formKey}
+            action={formAction}
+            className="flex flex-col gap-4"
+          >
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="ct-title">
+                Title <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="ct-title"
+                name="title"
+                type="text"
+                required
+                placeholder="Task title"
               />
             </div>
-          </div>
 
-          {state?.error && (
-            <p className="text-sm text-red-500">{state.error}</p>
-          )}
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="ct-description">Description</Label>
+              <textarea
+                id="ct-description"
+                name="description"
+                rows={3}
+                placeholder="Optional description…"
+                className="flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50"
+              />
+            </div>
 
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => dialogRef.current?.close()}
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={pending}
-              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-            >
-              {pending ? "Creating…" : "Create task"}
-            </button>
-          </div>
-        </form>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="ct-priority">Priority</Label>
+                <select
+                  id="ct-priority"
+                  name="priority"
+                  defaultValue="MEDIUM"
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring"
+                >
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="ct-deadline">Deadline</Label>
+                <Input id="ct-deadline" name="deadline" type="date" />
+              </div>
+            </div>
+
+            {state?.error && (
+              <p className="text-sm text-destructive">{state.error}</p>
+            )}
+
+            <div className="flex justify-end gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => dialogRef.current?.close()}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={pending}>
+                {pending ? "Creating…" : "Create task"}
+              </Button>
+            </div>
+          </form>
+        </div>
       </dialog>
     </>
   );
