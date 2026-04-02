@@ -35,4 +35,4 @@ EXPOSE 4000
 
 WORKDIR /app/apps/api
 
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main"]
+CMD ["sh", "-c", "/app/node_modules/.bin/prisma migrate deploy && node dist/main"]
