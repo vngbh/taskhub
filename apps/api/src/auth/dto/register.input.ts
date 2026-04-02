@@ -5,13 +5,13 @@ import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 export class RegisterInput {
   @Field()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @Field()
   @IsEmail()
-  email: string;
+  email!: string;
 
   @Field()
   @MinLength(8)
-  password: string;
+  password!: string;
 }

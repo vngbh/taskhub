@@ -10,20 +10,20 @@ registerEnumType(Role, { name: 'Role' });
 @ObjectType()
 export class User {
   @Field(() => ID)
-  id: string;
+  id!: string;
 
   @Field()
-  name: string;
+  name!: string;
 
   @Field()
-  email: string;
+  email!: string;
 
   @Field(() => Role)
-  role: Role;
+  role!: Role;
 
   @Field()
-  createdAt: Date;
+  createdAt!: Date;
 
   @Field()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
