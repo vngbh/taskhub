@@ -297,7 +297,7 @@ describe('GraphQL auth + tasks (e2e)', () => {
       createTaskMutation,
       {
         input: {
-          title: 'Ship TaskHub',
+          title: 'Ship taskhub',
         },
       },
       accessToken,
@@ -305,7 +305,7 @@ describe('GraphQL auth + tasks (e2e)', () => {
 
     expect(createTaskResponse.body.errors).toBeUndefined();
     expect(createTaskResponse.body.data?.createTask).toMatchObject({
-      title: 'Ship TaskHub',
+      title: 'Ship taskhub',
       status: 'TODO',
       priority: 'MEDIUM',
       userId: registerResponse.body.data?.register.user.id,
