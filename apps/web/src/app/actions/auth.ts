@@ -1,37 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { gql } from "graphql-request";
-import { getClient } from "@/lib/graphql";
+import { getSdkClient } from "@/lib/graphql";
 import { createSession, deleteSession } from "@/lib/session";
-
-const LOGIN_MUTATION = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input) {
-      accessToken
-      user {
-        id
-        email
-        name
-        role
-      }
-    }
-  }
-`;
-
-const REGISTER_MUTATION = gql`
-  mutation Register($input: RegisterInput!) {
-    register(input: $input) {
-      accessToken
-      user {
-        id
-        email
-        name
-        role
-      }
-    }
-  }
-`;
 
 export type AuthState = { error?: string } | undefined;
 
@@ -45,10 +16,7 @@ export async function login(
   if (!email || !password) return { error: "Email and password are required." };
 
   try {
-    const data = await getClient().request<{
-      login: { accessToken: string };
-    }>(LOGIN_MUTATION, { input: { email, password } });
-
+    const data = await getSdkClient().Login({ input: { email, password } });
     await createSession(data.login.accessToken);
   } catch {
     return { error: "Invalid email or password." };
@@ -78,9 +46,7 @@ export async function register(
     return { error: "Password does not meet security requirements." };
 
   try {
-    await getClient().request<{
-      register: { accessToken: string };
-    }>(REGISTER_MUTATION, { input: { name, email, password } });
+    await getSdkClient().Register({ input: { name, email, password } });
   } catch {
     return { error: "Registration failed. Email may already be in use." };
   }
