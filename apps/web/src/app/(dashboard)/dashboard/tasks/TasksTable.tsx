@@ -298,7 +298,7 @@ export function TasksTable({
               value={statusFilter}
               onValueChange={(v) => pushParam("status", v)}
             >
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-37.5">
                 <div className="flex items-center gap-2">
                   <Circle className="h-4 w-4" />
                   <SelectValue placeholder="Status" />
@@ -317,7 +317,7 @@ export function TasksTable({
               value={priorityFilter}
               onValueChange={(v) => pushParam("priority", v)}
             >
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-37.5">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="h-4 w-4" />
                   <SelectValue placeholder="Priority" />
@@ -347,12 +347,12 @@ export function TasksTable({
                     aria-label="Select all"
                   />
                 </TableHead>
-                <TableHead className="w-[120px]">ID</TableHead>
+                <TableHead className="w-30">ID</TableHead>
                 <TableHead>Title</TableHead>
-                <TableHead className="w-[150px]">Status</TableHead>
-                <TableHead className="w-[130px]">Priority</TableHead>
-                <TableHead className="w-[160px]">Deadline</TableHead>
-                <TableHead className="w-[60px]" />
+                <TableHead className="w-37.5">Status</TableHead>
+                <TableHead className="w-37.5">Priority</TableHead>
+                <TableHead className="w-40">Deadline</TableHead>
+                <TableHead className="w-15" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -460,7 +460,7 @@ export function TasksTable({
             <div className="flex items-center gap-2">
               <span className="shrink-0">Rows per page</span>
               <Select value={String(pageSize)} onValueChange={setPageSize}>
-                <SelectTrigger className="w-[76px]">
+                <SelectTrigger className="w-19">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

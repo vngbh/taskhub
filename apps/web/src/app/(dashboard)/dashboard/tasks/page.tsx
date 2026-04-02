@@ -26,9 +26,12 @@ export default async function TasksPage({
 
   const status = sp.status || undefined;
   const priority = sp.priority || undefined;
-  const [rawSortBy, rawSortOrder] = (sp.sort ?? "createdAt:desc").split(":");
-  const sortBy = rawSortBy || undefined;
-  const sortOrder = rawSortOrder || undefined;
+  // Only include sort when explicitly present in URL; convert camelCase → SCREAMING_SNAKE_CASE
+  const toScreamingSnake = (s: string) =>
+    s.replace(/([A-Z])/g, "_$1").toUpperCase();
+  const [rawSortBy, rawSortOrder] = sp.sort ? sp.sort.split(":") : [];
+  const sortBy = rawSortBy ? toScreamingSnake(rawSortBy) : undefined;
+  const sortOrder = rawSortOrder ? toScreamingSnake(rawSortOrder) : undefined;
 
   const filter: TaskFilterInput = {
     ...(status && { status: status as TaskStatus }),
@@ -58,8 +61,8 @@ export default async function TasksPage({
     tasks = tasksData.tasks;
     total = countData.tasksCount;
     userName = meData.me.name;
-  } catch {
-    // token expired or API down
+  } catch (err) {
+    console.error("[TasksPage] Failed to fetch tasks:", err);
   }
 
   return (
