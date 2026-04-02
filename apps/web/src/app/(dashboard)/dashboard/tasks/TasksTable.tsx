@@ -24,7 +24,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -163,16 +162,9 @@ interface TasksTableProps {
   total: number;
   page: number;
   pageSize: number;
-  userName?: string;
 }
 
-export function TasksTable({
-  tasks,
-  total,
-  page,
-  pageSize,
-  userName,
-}: TasksTableProps) {
+export function TasksTable({ tasks, total, page, pageSize }: TasksTableProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -254,31 +246,10 @@ export function TasksTable({
   // ── Pagination ─────────────────────────────────────────────────────────────
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const initials = userName
-    ? userName
-        .split(" ")
-        .map((w) => w[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase()
-    : "U";
 
   return (
     <Card className="rounded-2xl border bg-background shadow-sm">
       <CardContent className="p-6">
-        {/* ── Header ── */}
-        <div className="mb-8 flex items-start justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">My Tasks</h1>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              {total} task{total !== 1 ? "s" : ""} in total
-            </p>
-          </div>
-          <Avatar className="h-9 w-9">
-            <AvatarFallback className="text-sm">{initials}</AvatarFallback>
-          </Avatar>
-        </div>
-
         {/* ── Toolbar ── */}
         <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-1 flex-col gap-3 md:flex-row md:items-center">

@@ -99,7 +99,12 @@
   border-color: var(--color-border);
 }
 
-body {
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   background-color: var(--color-background);
-  color: var(--color-foreground);
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }

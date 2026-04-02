@@ -1,9 +1,11 @@
 import { getSession } from "@/lib/session";
 import { getSdkClient } from "@/lib/graphql";
 import { redirect } from "next/navigation";
+import { logout } from "@/app/actions/auth";
 import type { GetMeQuery } from "@/graphql/generated";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default async function ProfilePage() {
   const token = await getSession();
@@ -82,6 +84,12 @@ export default async function ProfilePage() {
           </dl>
         </CardContent>
       </Card>
+
+      <form action={logout}>
+        <Button variant="outline" size="sm" className="text-muted-foreground">
+          Sign out
+        </Button>
+      </form>
     </div>
   );
 }

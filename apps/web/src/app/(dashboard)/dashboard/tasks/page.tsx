@@ -42,12 +42,11 @@ export default async function TasksPage({
 
   let tasks: Task[] = [];
   let total = 0;
-  let userName: string | undefined;
 
   try {
     const sdk = getSdkClient(token);
     const hasFilter = Object.keys(filter).length > 0;
-    const [tasksData, countData, meData] = await Promise.all([
+    const [tasksData, countData] = await Promise.all([
       sdk.GetTasks({
         filter: hasFilter ? filter : undefined,
         skip: (page - 1) * pageSize,
@@ -56,24 +55,30 @@ export default async function TasksPage({
       sdk.GetTasksCount({
         filter: hasFilter ? filter : undefined,
       }),
-      sdk.GetMe(),
     ]);
     tasks = tasksData.tasks;
     total = countData.tasksCount;
-    userName = meData.me.name;
   } catch (err) {
     console.error("[TasksPage] Failed to fetch tasks:", err);
   }
 
   return (
-    <Suspense>
-      <TasksTable
-        tasks={tasks}
-        total={total}
-        page={page}
-        pageSize={pageSize}
-        userName={userName}
-      />
-    </Suspense>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-2xl font-semibold">My Tasks</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {total} task{total !== 1 ? "s" : ""} in total
+        </p>
+      </div>
+
+      <Suspense>
+        <TasksTable
+          tasks={tasks}
+          total={total}
+          page={page}
+          pageSize={pageSize}
+        />
+      </Suspense>
+    </div>
   );
 }

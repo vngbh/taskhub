@@ -1,18 +1,39 @@
 import Image from "next/image";
 import Link from "next/link";
-import { logout } from "@/app/actions/auth";
 import { NavLinks } from "@/app/(dashboard)/NavLinks";
-import { Button } from "@/components/ui/button";
+import { getSession } from "@/lib/session";
+import { getSdkClient } from "@/lib/graphql";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  let userName = "";
+  try {
+    const token = await getSession();
+    if (token) {
+      const { me } = await getSdkClient(token).GetMe();
+      userName = me.name;
+    }
+  } catch {
+    // ignore
+  }
+
+  const initials = userName
+    ? userName
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "U";
+
   return (
-    <div className="min-h-screen bg-muted/40">
-      <header className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+    <div className="flex min-h-screen flex-col bg-background">
+      <header className="sticky top-0 z-10 bg-background shadow">
+        <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center justify-center gap-5">
             <Link href="/dashboard" className="flex items-center gap-2">
               <Image
@@ -27,19 +48,38 @@ export default function DashboardLayout({
             </Link>
             <NavLinks />
           </div>
-          <form action={logout}>
-            <Button
-              type="submit"
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground"
-            >
-              Sign out
-            </Button>
-          </form>
+          <Link
+            href="/dashboard/profile"
+            aria-label="Profile"
+            className="flex items-center rounded-md p-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Avatar className="h-7 w-7">
+              <AvatarFallback className="bg-zinc-900 text-xs text-white dark:bg-zinc-100 dark:text-zinc-900">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+        {children}
+      </main>
+      <footer className="bg-background">
+        <div className="mx-auto flex max-w-5xl items-center justify-center px-6 py-12 text-xs text-muted-foreground">
+          <span>
+            Built by vngbh. The source code is available on{" "}
+            <a
+              href="https://github.com/vngbh/taskhub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-foreground transition-colors"
+            >
+              GitHub
+            </a>
+            .
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }
