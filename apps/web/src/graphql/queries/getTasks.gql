@@ -1,5 +1,5 @@
-query GetTasks {
-  tasks {
+query GetTasks($filter: TaskFilterInput, $skip: Int, $take: Int) {
+  tasks(filter: $filter, skip: $skip, take: $take) {
     id
     title
     description

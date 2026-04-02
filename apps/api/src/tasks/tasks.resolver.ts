@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { TasksService } from '@/tasks/tasks.service';
 import { Task } from '@/tasks/entities/task.entity';
@@ -22,8 +22,19 @@ export class TasksResolver {
     @CurrentUser() user: User,
     @Args('filter', { type: () => TaskFilterInput, nullable: true })
     filter?: TaskFilterInput,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
   ): Promise<PrismaTask[]> {
-    return this.tasksService.findAll(user.id, filter);
+    return this.tasksService.findAll(user.id, filter, skip, take);
+  }
+
+  @Query(() => Int, { name: 'tasksCount' })
+  countAll(
+    @CurrentUser() user: User,
+    @Args('filter', { type: () => TaskFilterInput, nullable: true })
+    filter?: TaskFilterInput,
+  ): Promise<number> {
+    return this.tasksService.countAll(user.id, filter);
   }
 
   @Query(() => TaskStats, { name: 'taskStats' })

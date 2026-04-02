@@ -7,7 +7,11 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { CreateTaskInput } from '@/tasks/dto/create-task.input';
 import { UpdateTaskInput } from '@/tasks/dto/update-task.input';
 import { UpdateTaskStatusInput } from '@/tasks/dto/update-task-status.input';
-import { TaskFilterInput } from '@/tasks/dto/task-filter.input';
+import {
+  TaskFilterInput,
+  SortBy,
+  SortOrder,
+} from '@/tasks/dto/task-filter.input';
 import { TaskStatus, Priority } from '@/tasks/entities/task.entity';
 import { TaskStats } from '@/tasks/entities/task-stats.entity';
 import type { Task } from '@prisma/client';
@@ -21,7 +25,12 @@ import {
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(userId: string, filter?: TaskFilterInput): Promise<Task[]> {
+  findAll(
+    userId: string,
+    filter?: TaskFilterInput,
+    skip?: number,
+    take?: number,
+  ): Promise<Task[]> {
     const where: Prisma.TaskWhereInput = { userId };
 
     if (filter?.status)
@@ -38,7 +47,41 @@ export class TasksService {
           filter.deadlineAfter;
     }
 
-    return this.prisma.task.findMany({ where, orderBy: { createdAt: 'desc' } });
+    const sortBy = filter?.sortBy ?? SortBy.CREATED_AT;
+    const sortOrder = filter?.sortOrder ?? SortOrder.DESC;
+    const orderBy: Prisma.TaskOrderByWithRelationInput =
+      sortBy === SortBy.PRIORITY
+        ? { priority: sortOrder }
+        : sortBy === SortBy.DEADLINE
+          ? { deadline: sortOrder }
+          : sortBy === SortBy.TITLE
+            ? { title: sortOrder }
+            : { createdAt: sortOrder };
+
+    return this.prisma.task.findMany({
+      where,
+      orderBy,
+      skip: skip ?? 0,
+      take: take ?? undefined,
+    });
+  }
+
+  countAll(userId: string, filter?: TaskFilterInput): Promise<number> {
+    const where: Prisma.TaskWhereInput = { userId };
+    if (filter?.status)
+      where.status = filter.status as unknown as PrismaTaskStatus;
+    if (filter?.priority)
+      where.priority = filter.priority as unknown as PrismaPriority;
+    if (filter?.deadlineBefore || filter?.deadlineAfter) {
+      where.deadline = {};
+      if (filter.deadlineBefore)
+        (where.deadline as Prisma.DateTimeNullableFilter).lte =
+          filter.deadlineBefore;
+      if (filter.deadlineAfter)
+        (where.deadline as Prisma.DateTimeNullableFilter).gte =
+          filter.deadlineAfter;
+    }
+    return this.prisma.task.count({ where });
   }
 
   async findById(id: string, userId: string): Promise<Task> {

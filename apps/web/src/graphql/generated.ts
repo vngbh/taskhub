@@ -90,6 +90,7 @@ export type Query = {
   task?: Maybe<Task>;
   taskStats: TaskStats;
   tasks: Array<Task>;
+  tasksCount: Scalars['Int']['output'];
   user?: Maybe<User>;
   users: Array<User>;
 };
@@ -101,6 +102,13 @@ export type QueryTaskArgs = {
 
 
 export type QueryTasksArgs = {
+  filter?: InputMaybe<TaskFilterInput>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryTasksCountArgs = {
   filter?: InputMaybe<TaskFilterInput>;
 };
 
@@ -120,6 +128,18 @@ export enum Role {
   User = 'USER'
 }
 
+export enum SortBy {
+  CreatedAt = 'CREATED_AT',
+  Deadline = 'DEADLINE',
+  Priority = 'PRIORITY',
+  Title = 'TITLE'
+}
+
+export enum SortOrder {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
 export type Task = {
   __typename?: 'Task';
   createdAt: Scalars['DateTime']['output'];
@@ -137,6 +157,8 @@ export type TaskFilterInput = {
   deadlineAfter?: InputMaybe<Scalars['DateTime']['input']>;
   deadlineBefore?: InputMaybe<Scalars['DateTime']['input']>;
   priority?: InputMaybe<Priority>;
+  sortBy?: InputMaybe<SortBy>;
+  sortOrder?: InputMaybe<SortOrder>;
   status?: InputMaybe<TaskStatus>;
 };
 
@@ -224,10 +246,21 @@ export type GetTaskStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTaskStatsQuery = { __typename?: 'Query', taskStats: { __typename?: 'TaskStats', total: number, todo: number, inProgress: number, done: number, overdue: number } };
 
-export type GetTasksQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetTasksQueryVariables = Exact<{
+  filter?: InputMaybe<TaskFilterInput>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
 
 export type GetTasksQuery = { __typename?: 'Query', tasks: Array<{ __typename?: 'Task', id: string, title: string, description?: string | null, status: TaskStatus, priority: Priority, deadline?: any | null, createdAt: any }> };
+
+export type GetTasksCountQueryVariables = Exact<{
+  filter?: InputMaybe<TaskFilterInput>;
+}>;
+
+
+export type GetTasksCountQuery = { __typename?: 'Query', tasksCount: number };
 
 
 export const CreateTaskDocument = gql`
@@ -298,8 +331,8 @@ export const GetTaskStatsDocument = gql`
 }
     `;
 export const GetTasksDocument = gql`
-    query GetTasks {
-  tasks {
+    query GetTasks($filter: TaskFilterInput, $skip: Int, $take: Int) {
+  tasks(filter: $filter, skip: $skip, take: $take) {
     id
     title
     description
@@ -308,6 +341,11 @@ export const GetTasksDocument = gql`
     deadline
     createdAt
   }
+}
+    `;
+export const GetTasksCountDocument = gql`
+    query GetTasksCount($filter: TaskFilterInput) {
+  tasksCount(filter: $filter)
 }
     `;
 
@@ -341,6 +379,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetTasks(variables?: GetTasksQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetTasksQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTasksQuery>({ document: GetTasksDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetTasks', 'query', variables);
+    },
+    GetTasksCount(variables?: GetTasksCountQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetTasksCountQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTasksCountQuery>({ document: GetTasksCountDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetTasksCount', 'query', variables);
     }
   };
 }

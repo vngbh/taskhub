@@ -1,0 +1,3 @@
+query GetTasksCount($filter: TaskFilterInput) {
+  tasksCount(filter: $filter)
+}
