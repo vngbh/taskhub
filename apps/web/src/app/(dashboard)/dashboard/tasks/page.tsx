@@ -1,33 +1,11 @@
-import { gql } from "graphql-request";
 import { getSession } from "@/lib/session";
-import { getClient } from "@/lib/graphql";
+import { getSdkClient } from "@/lib/graphql";
 import { redirect } from "next/navigation";
 import { CreateTaskDialog } from "@/app/(dashboard)/dashboard/tasks/CreateTaskDialog";
 import { TaskItem } from "@/app/(dashboard)/dashboard/tasks/TaskItem";
+import type { GetTasksQuery } from "@/graphql/generated";
 
-const TASKS_QUERY = gql`
-  query {
-    tasks {
-      id
-      title
-      description
-      status
-      priority
-      deadline
-      createdAt
-    }
-  }
-`;
-
-type Task = {
-  id: string;
-  title: string;
-  description?: string;
-  status: string;
-  priority: string;
-  deadline?: string;
-  createdAt: string;
-};
+type Task = GetTasksQuery["tasks"][number];
 
 export default async function TasksPage() {
   const token = await getSession();
@@ -35,7 +13,7 @@ export default async function TasksPage() {
 
   let tasks: Task[] = [];
   try {
-    const data = await getClient(token).request<{ tasks: Task[] }>(TASKS_QUERY);
+    const data = await getSdkClient(token).GetTasks();
     tasks = data.tasks;
   } catch {
     // token expired or API down — clear session handled by middleware
