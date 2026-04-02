@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './entities/task.entity';
+import { TaskStats } from './entities/task-stats.entity';
 import { CreateTaskInput } from '@/tasks/dto/create-task.input';
 import { UpdateTaskInput } from '@/tasks/dto/update-task.input';
 import { UpdateTaskStatusInput } from '@/tasks/dto/update-task-status.input';
@@ -23,6 +24,11 @@ export class TasksResolver {
     filter?: TaskFilterInput,
   ): Promise<PrismaTask[]> {
     return this.tasksService.findAll(user.id, filter);
+  }
+
+  @Query(() => TaskStats, { name: 'taskStats' })
+  getStats(@CurrentUser() user: User): Promise<TaskStats> {
+    return this.tasksService.getStats(user.id);
   }
 
   @Query(() => Task, { name: 'task', nullable: true })

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { logout } from "@/app/actions/auth";
 
 export default function DashboardLayout({
@@ -9,9 +10,25 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
       <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <span className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            TaskHub
-          </span>
+          <div className="flex items-center gap-6">
+            <span className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+              TaskHub
+            </span>
+            <nav className="flex items-center gap-4 text-sm">
+              <Link
+                href="/dashboard"
+                className="text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+              >
+                Overview
+              </Link>
+              <Link
+                href="/dashboard/tasks"
+                className="text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+              >
+                Tasks
+              </Link>
+            </nav>
+          </div>
           <form action={logout}>
             <button
               type="submit"
