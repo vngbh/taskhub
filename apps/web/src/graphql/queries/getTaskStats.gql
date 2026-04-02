@@ -1,0 +1,9 @@
+query GetTaskStats {
+  taskStats {
+    total
+    todo
+    inProgress
+    done
+    overdue
+  }
+}
