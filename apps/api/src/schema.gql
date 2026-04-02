@@ -43,6 +43,7 @@ enum Priority {
 type Query {
   me: User!
   task(id: ID!): Task
+  taskStats: TaskStats!
   tasks(filter: TaskFilterInput): [Task!]!
   user(id: ID!): User
   users: [User!]!
@@ -76,6 +77,14 @@ input TaskFilterInput {
   deadlineBefore: DateTime
   priority: Priority
   status: TaskStatus
+}
+
+type TaskStats {
+  done: Int!
+  inProgress: Int!
+  overdue: Int!
+  todo: Int!
+  total: Int!
 }
 
 enum TaskStatus {
