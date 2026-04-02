@@ -17,14 +17,14 @@ export default function DashboardLayout({
             <Link href="/dashboard" className="flex items-center gap-2">
               <Image
                 src="/logo.svg"
-                alt="TaskHub logo"
+                alt="taskhub logo"
                 width={22}
                 height={22}
                 loading="eager"
                 className="dark:invert"
               />
               <span className="text-sm font-semibold tracking-tight">
-                TaskHub
+                taskhub
               </span>
             </Link>
             <NavLinks />
