@@ -1,70 +1,89 @@
-import { PrismaClient } from "@prisma/client";
-import * as bcrypt from "bcryptjs";
-import { createAdmin, createUser } from "./factories/user.factory";
-import { createTaskBatch } from "./factories/task.factory";
+import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
+import { createAdmin, createUser } from './factories/user.factory';
+import { createTaskBatch } from './factories/task.factory';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log("🌱 Seeding database...");
+// ─── Config ──────────────────────────────────────────────────────────────────
 
-  // Clean existing data in order (tasks first, then users)
+const DEFAULT_PASSWORD = 'Password123!';
+
+const FIXED_USERS = [
+  { name: 'Admin', email: 'admin@taskhub.dev', role: 'ADMIN' as const },
+  { name: 'Alice Nguyen', email: 'alice@taskhub.dev' },
+  { name: 'Bob Tran', email: 'bob@taskhub.dev' },
+  { name: 'Carol Le', email: 'carol@taskhub.dev' },
+  { name: 'David Pham', email: 'david@taskhub.dev' },
+];
+
+// Extra randomly generated users
+const RANDOM_USER_COUNT = 5;
+
+// Tasks per user: random in [min, max]
+const TASKS_PER_USER = { min: 12, max: 20 };
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
+async function main() {
+  console.log('🌱 Seeding database…');
+
   await prisma.task.deleteMany();
   await prisma.user.deleteMany();
+  console.log('  🗑️  Cleared existing data');
 
-  const SALT_ROUNDS = 10;
-  const DEFAULT_PASSWORD = await bcrypt.hash("password123", SALT_ROUNDS);
+  const hashedPassword = await bcrypt.hash(DEFAULT_PASSWORD, 10);
 
-  // 1. Create admin
-  const adminData = createAdmin({ email: "admin@taskhub.dev", name: "Admin" });
-  const admin = await prisma.user.create({
-    data: {
-      ...adminData,
-      password: DEFAULT_PASSWORD,
-    },
+  // 1. Fixed users ────────────────────────────────────────────────────────────
+  const fixedUserData = FIXED_USERS.map((u) => {
+    const base =
+      u.role === 'ADMIN'
+        ? createAdmin({ name: u.name, email: u.email })
+        : createUser({ name: u.name, email: u.email });
+    return { ...base, password: hashedPassword };
   });
-  console.log(`✅ Admin created: ${admin.email}`);
 
-  // 2. Create 3 regular users
-  const userSeeds = [
-    createUser({
-      overrides: { email: "alice@taskhub.dev", name: "Alice Nguyen" },
-    }),
-    createUser({ overrides: { email: "bob@taskhub.dev", name: "Bob Tran" } }),
-    createUser({ overrides: { email: "carol@taskhub.dev", name: "Carol Le" } }),
-  ];
-
-  const users = await Promise.all(
-    userSeeds.map(async (u) =>
-      prisma.user.create({
-        data: {
-          ...u,
-          password: DEFAULT_PASSWORD,
-        },
-      }),
-    ),
+  const fixedUsers = await Promise.all(
+    fixedUserData.map((data) => prisma.user.create({ data })),
   );
-  console.log(`✅ ${users.length} users created`);
+  console.log(`  ✅ ${fixedUsers.length} fixed users created`);
 
-  // 3. Seed 10–15 tasks per user (including admin)
-  const allUsers = [admin, ...users];
+  // 2. Random users ───────────────────────────────────────────────────────────
+  const randomUserData = Array.from({ length: RANDOM_USER_COUNT }, () => ({
+    ...createUser(),
+    password: hashedPassword,
+  }));
+
+  const randomUsers = await Promise.all(
+    randomUserData.map((data) => prisma.user.create({ data })),
+  );
+  console.log(`  ✅ ${randomUsers.length} random users created`);
+
+  // 3. Tasks ──────────────────────────────────────────────────────────────────
+  const allUsers = [...fixedUsers, ...randomUsers];
+  let totalTasks = 0;
 
   for (const user of allUsers) {
-    const taskCount = Math.floor(Math.random() * 6) + 10; // 10–15
-    const tasks = createTaskBatch(user.id, taskCount);
+    const count =
+      Math.floor(
+        Math.random() * (TASKS_PER_USER.max - TASKS_PER_USER.min + 1),
+      ) + TASKS_PER_USER.min;
 
+    const tasks = createTaskBatch(user.id, count);
     await prisma.task.createMany({ data: tasks });
-    console.log(`  📋 ${taskCount} tasks created for ${user.email}`);
+    totalTasks += count;
+    console.log(`  📋 ${count} tasks → ${user.email}`);
   }
 
-  console.log("🎉 Seed complete!");
+  console.log(`\n🎉 Seed complete!`);
+  console.log(`   Users : ${allUsers.length}`);
+  console.log(`   Tasks : ${totalTasks}`);
+  console.log(`   Password for all accounts: ${DEFAULT_PASSWORD}`);
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Seed failed:", e);
+    console.error('❌ Seed failed:', e);
     process.exit(1);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .finally(() => prisma.$disconnect());
