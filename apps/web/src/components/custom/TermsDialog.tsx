@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog as DialogPrimitive } from "radix-ui";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { DialogOverlay, DialogPortal } from "@/components/ui/dialog";
 
 export function TermsDialog() {

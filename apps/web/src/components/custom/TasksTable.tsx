@@ -11,18 +11,17 @@ import {
   ArrowDown,
   Search,
   SlidersHorizontal,
-  Plus,
   MoreHorizontal,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
   CalendarClock,
+  Trash2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -48,10 +47,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { CreateTaskDialog } from "./CreateTaskDialog";
-import { EditTaskDialog } from "./EditTaskDialog";
+import { CreateTaskDialog } from "@/components/custom/CreateTaskDialog";
+import { EditTaskDialog } from "@/components/custom/EditTaskDialog";
 import { deleteTask } from "@/app/actions/tasks";
 import { cn } from "@/lib/utils";
+import {
+  TASK_PRIORITY_VISUAL,
+  TASK_STATUS_VISUAL,
+  type TaskPriorityVisualKey,
+  type TaskStatusVisualKey,
+} from "@/lib/task-visuals";
 import type { GetTasksQuery } from "@/graphql/generated";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -68,61 +73,38 @@ const STATUS_ICON: Record<string, React.ElementType> = {
   DONE: CircleCheck,
 };
 
-const STATUS_LABEL: Record<string, string> = {
-  TODO: "Todo",
-  IN_PROGRESS: "In Progress",
-  DONE: "Done",
-};
-
-const STATUS_CLASS: Record<string, string> = {
-  TODO: "text-muted-foreground",
-  IN_PROGRESS: "text-blue-500",
-  DONE: "text-green-600 dark:text-green-400",
-};
-
 const PRIORITY_ICON: Record<string, React.ElementType> = {
   LOW: ArrowDown,
   MEDIUM: ArrowRight,
   HIGH: ArrowUp,
 };
 
-const PRIORITY_LABEL: Record<string, string> = {
-  LOW: "Low",
-  MEDIUM: "Medium",
-  HIGH: "High",
-};
-
-const PRIORITY_CLASS: Record<string, string> = {
-  LOW: "text-muted-foreground",
-  MEDIUM: "text-yellow-500",
-  HIGH: "text-destructive",
-};
-
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
 function StatusCell({ status }: { status: string }) {
   const Icon = STATUS_ICON[status] ?? Circle;
+  const visual = TASK_STATUS_VISUAL[status as TaskStatusVisualKey];
   return (
     <div
-      className={cn("flex items-center gap-2 text-sm", STATUS_CLASS[status])}
+      className="flex items-center gap-2 text-sm"
+      style={{ color: visual?.color }}
     >
       <Icon className="h-4 w-4 shrink-0" />
-      <span>{STATUS_LABEL[status] ?? status}</span>
+      <span>{visual?.label ?? status}</span>
     </div>
   );
 }
 
 function PriorityCell({ priority }: { priority: string }) {
   const Icon = PRIORITY_ICON[priority] ?? ArrowRight;
+  const visual = TASK_PRIORITY_VISUAL[priority as TaskPriorityVisualKey];
   return (
     <div
-      className={cn(
-        "flex items-center gap-2 text-sm",
-        PRIORITY_CLASS[priority],
-      )}
+      className="flex items-center gap-2 text-sm"
+      style={{ color: visual?.color }}
     >
       <Icon className="h-4 w-4 shrink-0" />
-      <span>{PRIORITY_LABEL[priority] ?? priority}</span>
+      <span>{visual?.label ?? priority}</span>
     </div>
   );
 }
@@ -231,7 +213,11 @@ export function TasksTable({ tasks, total, page, pageSize }: TasksTableProps) {
   function toggleOne(id: string) {
     setSelected((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   }
@@ -318,7 +304,6 @@ export function TasksTable({ tasks, total, page, pageSize }: TasksTableProps) {
                     aria-label="Select all"
                   />
                 </TableHead>
-                <TableHead className="w-30">ID</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead className="w-37.5">Status</TableHead>
                 <TableHead className="w-37.5">Priority</TableHead>
@@ -330,7 +315,7 @@ export function TasksTable({ tasks, total, page, pageSize }: TasksTableProps) {
               {filteredTasks.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={7}
+                    colSpan={6}
                     className="py-10 text-center text-sm text-muted-foreground"
                   >
                     No tasks match your filters.
@@ -352,30 +337,13 @@ export function TasksTable({ tasks, total, page, pageSize }: TasksTableProps) {
                         aria-label={`Select ${task.title}`}
                       />
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      {task.id.slice(0, 8)}
-                    </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Badge
-                          variant="outline"
-                          className={cn(
-                            "shrink-0 text-[11px]",
-                            task.status === "DONE" &&
-                              "border-green-500/30 text-green-600 dark:text-green-400",
-                            task.status === "IN_PROGRESS" &&
-                              "border-blue-500/30 text-blue-500",
-                          )}
-                        >
-                          {STATUS_LABEL[task.status] ?? task.status}
-                        </Badge>
-                        <span
-                          className="truncate max-w-[280px] text-sm"
-                          title={task.title}
-                        >
-                          {task.title}
-                        </span>
-                      </div>
+                      <span
+                        className="block max-w-70 truncate text-sm"
+                        title={task.title}
+                      >
+                        {task.title}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <StatusCell status={task.status} />
@@ -408,6 +376,7 @@ export function TasksTable({ tasks, total, page, pageSize }: TasksTableProps) {
                             className="text-destructive focus:text-destructive"
                             onSelect={() => handleDelete(task.id, task.title)}
                           >
+                            <Trash2 className="mr-2 h-4 w-4 text-destructive" />
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>

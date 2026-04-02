@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { NavLinks } from "@/app/(dashboard)/NavLinks";
+import { NavLinks } from "@/components/custom/NavLinks";
 import { getSession } from "@/lib/session";
 import { getSdkClient } from "@/lib/graphql";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -33,7 +33,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-10 bg-background shadow">
-        <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center justify-between px-6 py-2">
           <div className="flex items-center justify-center gap-5">
             <Link href="/dashboard" className="flex items-center gap-2">
               <Image
@@ -54,7 +54,7 @@ export default async function DashboardLayout({
             className="flex items-center rounded-md p-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <Avatar className="h-7 w-7">
-              <AvatarFallback className="bg-zinc-900 text-xs text-white dark:bg-zinc-100 dark:text-zinc-900">
+              <AvatarFallback className="bg-zinc-900 text-[9px] text-white dark:bg-zinc-100 dark:text-zinc-900">
                 {initials}
               </AvatarFallback>
             </Avatar>
@@ -65,9 +65,9 @@ export default async function DashboardLayout({
         {children}
       </main>
       <footer className="bg-background">
-        <div className="mx-auto flex max-w-5xl items-center justify-center px-6 py-12 text-xs text-muted-foreground">
+        <div className="mx-auto flex max-w-5xl items-center justify-center px-6 pb-8 pt-24 text-xs text-neutral-400">
           <span>
-            Built by vngbh. The source code is available on{" "}
+            The source code is available on{" "}
             <a
               href="https://github.com/vngbh/taskhub"
               target="_blank"

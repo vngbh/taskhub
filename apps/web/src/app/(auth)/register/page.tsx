@@ -101,10 +101,7 @@ export default function RegisterPage() {
             type="text"
             autoComplete="name"
             placeholder="Your name"
-            className={cn(
-              fieldErrors.name &&
-                "border-destructive focus-visible:ring-destructive/20",
-            )}
+            className={cn(fieldErrors.name && "border-destructive")}
             onChange={() => clearField("name")}
           />
           <FieldError message={fieldErrors.name} />
@@ -119,10 +116,7 @@ export default function RegisterPage() {
             type="email"
             autoComplete="email"
             placeholder="you@example.com"
-            className={cn(
-              fieldErrors.email &&
-                "border-destructive focus-visible:ring-destructive/20",
-            )}
+            className={cn(fieldErrors.email && "border-destructive")}
             onChange={() => clearField("email")}
           />
           <FieldError message={fieldErrors.email} />
@@ -144,8 +138,7 @@ export default function RegisterPage() {
               }}
               className={cn(
                 "pr-10",
-                fieldErrors.password &&
-                  "border-destructive focus-visible:ring-destructive/20",
+                fieldErrors.password && "border-destructive",
               )}
               placeholder="••••••••"
             />
@@ -199,8 +192,7 @@ export default function RegisterPage() {
               }}
               className={cn(
                 "pr-10",
-                fieldErrors.confirm &&
-                  "border-destructive focus-visible:ring-destructive/20",
+                fieldErrors.confirm && "border-destructive",
               )}
               placeholder="••••••••"
             />

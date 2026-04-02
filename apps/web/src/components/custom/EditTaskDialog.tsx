@@ -5,7 +5,15 @@ import { Pencil } from "lucide-react";
 import { updateTask, type TaskFormState } from "@/app/actions/tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/custom/DatePicker";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
@@ -33,6 +41,9 @@ export function EditTaskDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [formKey, setFormKey] = useState(0);
+  const [descriptionLength, setDescriptionLength] = useState(
+    task.description?.length ?? 0,
+  );
 
   const deadlineDate = task.deadline
     ? new Date(task.deadline).toISOString().split("T")[0]
@@ -51,7 +62,10 @@ export function EditTaskDialog({
 
   function handleOpenChange(next: boolean) {
     setOpen(next);
-    if (next) setFormKey((k) => k + 1);
+    if (next) {
+      setFormKey((k) => k + 1);
+      setDescriptionLength(task.description?.length ?? 0);
+    }
   }
 
   return (
@@ -103,49 +117,52 @@ export function EditTaskDialog({
             <textarea
               id="et-description"
               name="description"
-              rows={3}
+              rows={5}
+              maxLength={100}
+              onChange={(e) => setDescriptionLength(e.target.value.length)}
               defaultValue={task.description ?? ""}
               placeholder="Optional description…"
-              className="flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex min-h-32 w-full resize-none rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-placeholdergrey focus-visible:outline-none focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50"
             />
+            <p className="text-right text-xs text-muted-foreground">
+              {descriptionLength}/100
+            </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="flex flex-col gap-1.5">
+          <div className="grid grid-cols-8 gap-3">
+            <div className="col-span-2 flex flex-col gap-1.5">
               <Label htmlFor="et-priority">Priority</Label>
-              <select
-                id="et-priority"
-                name="priority"
-                defaultValue={task.priority}
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring"
-              >
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
-              </select>
+              <Select name="priority" defaultValue={task.priority}>
+                <SelectTrigger id="et-priority" className="w-full">
+                  <SelectValue placeholder="Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="LOW">Low</SelectItem>
+                  <SelectItem value="MEDIUM">Medium</SelectItem>
+                  <SelectItem value="HIGH">High</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="flex flex-col gap-1.5">
+            <div className="col-span-3 flex flex-col gap-1.5">
               <Label htmlFor="et-status">Status</Label>
-              <select
-                id="et-status"
-                name="status"
-                defaultValue={task.status}
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring"
-              >
-                <option value="TODO">To Do</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="DONE">Done</option>
-              </select>
+              <Select name="status" defaultValue={task.status}>
+                <SelectTrigger id="et-status" className="w-full">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="TODO">To Do</SelectItem>
+                  <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                  <SelectItem value="DONE">Done</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="et-deadline">Deadline</Label>
-              <Input
-                id="et-deadline"
+            <div className="col-span-3 flex flex-col gap-1.5">
+              <Label>Deadline</Label>
+              <DatePicker
                 name="deadline"
-                type="date"
-                defaultValue={deadlineDate}
+                defaultValue={deadlineDate || undefined}
               />
             </div>
           </div>

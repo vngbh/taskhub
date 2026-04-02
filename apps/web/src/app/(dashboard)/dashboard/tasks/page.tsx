@@ -2,7 +2,7 @@ import { getSession } from "@/lib/session";
 import { getSdkClient } from "@/lib/graphql";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { TasksTable } from "@/app/(dashboard)/dashboard/tasks/TasksTable";
+import { TasksTable } from "@/components/custom/TasksTable";
 import type { GetTasksQuery, TaskFilterInput } from "@/graphql/generated";
 import { Priority, TaskStatus, SortBy, SortOrder } from "@/graphql/generated";
 

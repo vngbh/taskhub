@@ -1,24 +1,19 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getSdkClient } from "@/lib/graphql";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import type { GetTaskStatsQuery } from "@/graphql/generated";
+import {
+  Priority,
+  TaskStatus,
+  type GetTaskStatsQuery,
+} from "@/graphql/generated";
+import { TaskStatusChart } from "@/components/custom/TaskStatusChart";
 
 type TaskStats = GetTaskStatsQuery["taskStats"];
-
-type StatCard = {
-  label: string;
-  value: number;
-  badgeVariant?: "default" | "secondary" | "destructive" | "outline";
-};
 
 export default async function DashboardPage() {
   const token = await getSession();
   if (!token) redirect("/login");
+  const sdk = getSdkClient(token);
 
   let stats: TaskStats = {
     total: 0,
@@ -27,27 +22,73 @@ export default async function DashboardPage() {
     done: 0,
     overdue: 0,
   };
+
+  let inProgressByPriority = { low: 0, medium: 0, high: 0 };
+  let todoByPriority = { low: 0, medium: 0, high: 0 };
+  let doneByPriority = { low: 0, medium: 0, high: 0 };
+
   try {
-    const data = await getSdkClient(token).GetTaskStats();
-    stats = data.taskStats;
+    const [
+      statsData,
+      inProgressLow,
+      inProgressMedium,
+      inProgressHigh,
+      todoLow,
+      todoMedium,
+      todoHigh,
+      doneLow,
+      doneMedium,
+      doneHigh,
+    ] = await Promise.all([
+      sdk.GetTaskStats(),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.InProgress, priority: Priority.Low },
+      }),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.InProgress, priority: Priority.Medium },
+      }),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.InProgress, priority: Priority.High },
+      }),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.Todo, priority: Priority.Low },
+      }),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.Todo, priority: Priority.Medium },
+      }),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.Todo, priority: Priority.High },
+      }),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.Done, priority: Priority.Low },
+      }),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.Done, priority: Priority.Medium },
+      }),
+      sdk.GetTasksCount({
+        filter: { status: TaskStatus.Done, priority: Priority.High },
+      }),
+    ]);
+
+    stats = statsData.taskStats;
+    inProgressByPriority = {
+      low: inProgressLow.tasksCount,
+      medium: inProgressMedium.tasksCount,
+      high: inProgressHigh.tasksCount,
+    };
+    todoByPriority = {
+      low: todoLow.tasksCount,
+      medium: todoMedium.tasksCount,
+      high: todoHigh.tasksCount,
+    };
+    doneByPriority = {
+      low: doneLow.tasksCount,
+      medium: doneMedium.tasksCount,
+      high: doneHigh.tasksCount,
+    };
   } catch {
     // API down or token expired
   }
-
-  const cards: StatCard[] = [
-    { label: "Total", value: stats.total },
-    { label: "To Do", value: stats.todo, badgeVariant: "outline" },
-    {
-      label: "In Progress",
-      value: stats.inProgress,
-      badgeVariant: "secondary",
-    },
-    { label: "Done", value: stats.done },
-    { label: "Overdue", value: stats.overdue, badgeVariant: "destructive" },
-  ];
-
-  const pct =
-    stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0;
 
   return (
     <div className="space-y-8">
@@ -58,48 +99,12 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        {cards.map((card) => (
-          <Link key={card.label} href="/dashboard/tasks">
-            <Card className="gap-3 py-4 transition-shadow hover:shadow-md">
-              <CardContent className="px-5">
-                <p className="text-sm text-muted-foreground">{card.label}</p>
-                <p className="mt-1 text-3xl font-semibold">{card.value}</p>
-                {card.badgeVariant && card.value > 0 && (
-                  <Badge
-                    variant={card.badgeVariant}
-                    className="mt-2 text-[10px]"
-                  >
-                    {card.label}
-                  </Badge>
-                )}
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
-
-      {/* Completion progress */}
-      {stats.total > 0 && (
-        <Card>
-          <CardContent className="px-6 py-5">
-            <div className="mb-2 flex items-center justify-between text-sm">
-              <span className="font-medium">Completion</span>
-              <span className="text-muted-foreground">
-                {stats.done}/{stats.total} tasks · {pct}%
-              </span>
-            </div>
-            <Progress value={pct} className="h-2.5" />
-          </CardContent>
-        </Card>
-      )}
-
-      <div>
-        <Button asChild>
-          <Link href="/dashboard/tasks">View all tasks</Link>
-        </Button>
-      </div>
+      <TaskStatusChart
+        stats={stats}
+        inProgressByPriority={inProgressByPriority}
+        todoByPriority={todoByPriority}
+        doneByPriority={doneByPriority}
+      />
     </div>
   );
 }

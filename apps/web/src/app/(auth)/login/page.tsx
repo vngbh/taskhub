@@ -49,10 +49,7 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             placeholder="you@example.com"
-            className={cn(
-              fieldErrors.email &&
-                "border-destructive focus-visible:ring-destructive/20",
-            )}
+            className={cn(fieldErrors.email && "border-destructive")}
             onChange={() => setFieldErrors((p) => ({ ...p, email: undefined }))}
           />
           <FieldError message={fieldErrors.email} />
@@ -66,10 +63,7 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             placeholder="••••••••"
-            className={cn(
-              fieldErrors.password &&
-                "border-destructive focus-visible:ring-destructive/20",
-            )}
+            className={cn(fieldErrors.password && "border-destructive")}
             onChange={() =>
               setFieldErrors((p) => ({ ...p, password: undefined }))
             }
