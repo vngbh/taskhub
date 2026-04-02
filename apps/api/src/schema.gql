@@ -44,7 +44,8 @@ type Query {
   me: User!
   task(id: ID!): Task
   taskStats: TaskStats!
-  tasks(filter: TaskFilterInput): [Task!]!
+  tasks(filter: TaskFilterInput, skip: Int, take: Int): [Task!]!
+  tasksCount(filter: TaskFilterInput): Int!
   user(id: ID!): User
   users: [User!]!
 }
@@ -58,6 +59,18 @@ input RegisterInput {
 enum Role {
   ADMIN
   USER
+}
+
+enum SortBy {
+  CREATED_AT
+  DEADLINE
+  PRIORITY
+  TITLE
+}
+
+enum SortOrder {
+  ASC
+  DESC
 }
 
 type Task {
@@ -76,6 +89,8 @@ input TaskFilterInput {
   deadlineAfter: DateTime
   deadlineBefore: DateTime
   priority: Priority
+  sortBy: SortBy
+  sortOrder: SortOrder
   status: TaskStatus
 }
 
