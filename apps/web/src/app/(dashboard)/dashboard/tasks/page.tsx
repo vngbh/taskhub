@@ -2,16 +2,13 @@ import { getSession } from "@/lib/session";
 import { getSdkClient } from "@/lib/graphql";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { CreateTaskDialog } from "@/app/(dashboard)/dashboard/tasks/CreateTaskDialog";
-import { TaskItem } from "@/app/(dashboard)/dashboard/tasks/TaskItem";
-import { TaskFilters } from "@/app/(dashboard)/dashboard/tasks/TaskFilters";
-import { TaskPagination } from "@/app/(dashboard)/dashboard/tasks/TaskPagination";
+import { TasksTable } from "@/app/(dashboard)/dashboard/tasks/TasksTable";
 import type { GetTasksQuery, TaskFilterInput } from "@/graphql/generated";
 import { Priority, TaskStatus, SortBy, SortOrder } from "@/graphql/generated";
 
 type Task = GetTasksQuery["tasks"][number];
 
-const PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 10;
 
 export default async function TasksPage({
   searchParams,
@@ -23,6 +20,10 @@ export default async function TasksPage({
 
   const sp = await searchParams;
   const page = Math.max(1, parseInt(sp.page ?? "1", 10));
+  const pageSize = [10, 20, 50].includes(parseInt(sp.pageSize ?? "", 10))
+    ? parseInt(sp.pageSize, 10)
+    : DEFAULT_PAGE_SIZE;
+
   const status = sp.status || undefined;
   const priority = sp.priority || undefined;
   const [rawSortBy, rawSortOrder] = (sp.sort ?? "createdAt:desc").split(":");
@@ -38,52 +39,38 @@ export default async function TasksPage({
 
   let tasks: Task[] = [];
   let total = 0;
+  let userName: string | undefined;
 
   try {
     const sdk = getSdkClient(token);
-    const [tasksData, countData] = await Promise.all([
+    const hasFilter = Object.keys(filter).length > 0;
+    const [tasksData, countData, meData] = await Promise.all([
       sdk.GetTasks({
-        filter: Object.keys(filter).length ? filter : undefined,
-        skip: (page - 1) * PAGE_SIZE,
-        take: PAGE_SIZE,
+        filter: hasFilter ? filter : undefined,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
       }),
       sdk.GetTasksCount({
-        filter: Object.keys(filter).length ? filter : undefined,
+        filter: hasFilter ? filter : undefined,
       }),
+      sdk.GetMe(),
     ]);
     tasks = tasksData.tasks;
     total = countData.tasksCount;
+    userName = meData.me.name;
   } catch {
     // token expired or API down
   }
 
   return (
-    <div>
-      <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">My Tasks</h1>
-        <CreateTaskDialog />
-      </div>
-
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Suspense>
-          <TaskFilters />
-        </Suspense>
-        <span className="text-sm text-muted-foreground">{total} tasks</span>
-      </div>
-
-      {tasks.length === 0 ? (
-        <p className="text-muted-foreground">No tasks match your filters.</p>
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {tasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
-          ))}
-        </ul>
-      )}
-
-      <Suspense>
-        <TaskPagination total={total} page={page} />
-      </Suspense>
-    </div>
+    <Suspense>
+      <TasksTable
+        tasks={tasks}
+        total={total}
+        page={page}
+        pageSize={pageSize}
+        userName={userName}
+      />
+    </Suspense>
   );
 }

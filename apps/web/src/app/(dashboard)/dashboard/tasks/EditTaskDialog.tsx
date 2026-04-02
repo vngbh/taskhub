@@ -6,6 +6,7 @@ import { updateTask, type TaskFormState } from "@/app/actions/tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +24,13 @@ type Task = {
   deadline?: string | null;
 };
 
-export function EditTaskDialog({ task }: { task: Task }) {
+export function EditTaskDialog({
+  task,
+  asMenuItem = false,
+}: {
+  task: Task;
+  asMenuItem?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [formKey, setFormKey] = useState(0);
 
@@ -50,14 +57,21 @@ export function EditTaskDialog({ task }: { task: Task }) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 text-muted-foreground hover:text-foreground"
-          title="Edit task"
-        >
-          <Pencil size={14} />
-        </Button>
+        {asMenuItem ? (
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
+        ) : (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 text-muted-foreground hover:text-foreground"
+            title="Edit task"
+          >
+            <Pencil size={14} />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

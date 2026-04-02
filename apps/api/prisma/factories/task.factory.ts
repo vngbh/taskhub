@@ -16,7 +16,7 @@ const TASK_TEMPLATES = [
   'Update {module} dependencies to latest versions',
   'Implement rate limiting on {module} API',
   // Product / Design
-  'Design wireframes for {module} page',
+  'Design wire frames for {module} page',
   'Conduct user research on {module} flow',
   'Create A/B test plan for {module} onboarding',
   'Update {module} copy based on feedback',
