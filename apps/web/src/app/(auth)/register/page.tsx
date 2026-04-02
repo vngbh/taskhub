@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { AuthCard } from "@/components/custom/AuthCard";
 import { TermsDialog } from "@/components/custom/TermsDialog";
+import { FormError, FieldError } from "@/components/custom/FormError";
 
 const RULES = [
   {
@@ -35,31 +36,50 @@ const RULES = [
   },
 ];
 
+type FieldErrors = {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirm?: string;
+};
+
 export default function RegisterPage() {
   const [state, action, pending] = useActionState(register, undefined);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [clientError, setClientError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   const allRulesPassed = RULES.every((r) => r.test(password));
-  const confirmMismatch = submitted && password !== confirm;
+
+  function clearField(field: keyof FieldErrors) {
+    setFieldErrors((p) => ({ ...p, [field]: undefined }));
+  }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    setSubmitted(true);
-    if (!allRulesPassed) {
+    const fd = new FormData(e.currentTarget);
+    const errors: FieldErrors = {};
+
+    if (!fd.get("name")) errors.name = "Name is required.";
+    if (!fd.get("email")) errors.email = "Email is required.";
+    if (!password) {
+      errors.password = "Password is required.";
+    } else if (!allRulesPassed) {
+      errors.password = "Password does not meet all requirements.";
+    }
+    if (!confirm) {
+      errors.confirm = "Please confirm your password.";
+    } else if (password !== confirm) {
+      errors.confirm = "Passwords do not match.";
+    }
+
+    if (Object.keys(errors).length) {
       e.preventDefault();
-      setClientError("Password does not meet all requirements.");
+      setFieldErrors(errors);
       return;
     }
-    if (password !== confirm) {
-      e.preventDefault();
-      setClientError("Passwords do not match.");
-      return;
-    }
-    setClientError("");
+    setFieldErrors({});
   }
 
   return (
@@ -69,32 +89,46 @@ export default function RegisterPage() {
       <form
         action={action}
         onSubmit={handleSubmit}
+        noValidate
         className="flex flex-col gap-4"
       >
+        {/* Name */}
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
             name="name"
             type="text"
-            required
             autoComplete="name"
             placeholder="Your name"
+            className={cn(
+              fieldErrors.name &&
+                "border-destructive focus-visible:ring-destructive/20",
+            )}
+            onChange={() => clearField("name")}
           />
+          <FieldError message={fieldErrors.name} />
         </div>
 
+        {/* Email */}
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
             name="email"
             type="email"
-            required
             autoComplete="email"
             placeholder="you@example.com"
+            className={cn(
+              fieldErrors.email &&
+                "border-destructive focus-visible:ring-destructive/20",
+            )}
+            onChange={() => clearField("email")}
           />
+          <FieldError message={fieldErrors.email} />
         </div>
 
+        {/* Password */}
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
@@ -102,25 +136,32 @@ export default function RegisterPage() {
               id="password"
               name="password"
               type={showPassword ? "text" : "password"}
-              required
               autoComplete="new-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="pr-10"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                clearField("password");
+              }}
+              className={cn(
+                "pr-10",
+                fieldErrors.password &&
+                  "border-destructive focus-visible:ring-destructive/20",
+              )}
               placeholder="••••••••"
             />
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               disabled={!password}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
+          <FieldError message={fieldErrors.password} />
           {password.length > 0 && (
-            <ul className="mt-1 space-y-1">
+            <ul className="mt-0.5 space-y-1">
               {RULES.map((rule) => {
                 const passed = rule.test(password);
                 return (
@@ -142,6 +183,7 @@ export default function RegisterPage() {
           )}
         </div>
 
+        {/* Confirm Password */}
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="confirm">Confirm Password</Label>
           <div className="relative">
@@ -149,13 +191,15 @@ export default function RegisterPage() {
               id="confirm"
               name="confirm"
               type={showConfirm ? "text" : "password"}
-              required
               autoComplete="new-password"
               value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
+              onChange={(e) => {
+                setConfirm(e.target.value);
+                clearField("confirm");
+              }}
               className={cn(
                 "pr-10",
-                confirmMismatch &&
+                fieldErrors.confirm &&
                   "border-destructive focus-visible:ring-destructive/20",
               )}
               placeholder="••••••••"
@@ -164,19 +208,17 @@ export default function RegisterPage() {
               type="button"
               onClick={() => setShowConfirm((v) => !v)}
               disabled={!confirm}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
               aria-label={showConfirm ? "Hide password" : "Show password"}
             >
               {showConfirm ? "Hide" : "Show"}
             </button>
           </div>
+          <FieldError message={fieldErrors.confirm} />
         </div>
 
-        {(clientError || state?.error) && (
-          <p className="text-sm text-destructive">
-            {clientError || state?.error}
-          </p>
-        )}
+        {/* Server error */}
+        <FormError message={state?.error} />
 
         <Button type="submit" disabled={pending} className="mt-2 w-full">
           {pending ? "Registering…" : "Register"}
