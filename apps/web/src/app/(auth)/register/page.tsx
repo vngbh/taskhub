@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { AuthCard } from "@/components/custom/AuthCard";
+import { TermsDialog } from "@/components/custom/TermsDialog";
 
 const RULES = [
   {
@@ -63,7 +64,7 @@ export default function RegisterPage() {
 
   return (
     <AuthCard>
-      <h2 className="mb-6 text-center text-2xl font-semibold">Register</h2>
+      <h2 className="mb-5 text-center text-2xl font-semibold">Register</h2>
 
       <form
         action={action}
@@ -180,15 +181,19 @@ export default function RegisterPage() {
         <Button type="submit" disabled={pending} className="mt-2 w-full">
           {pending ? "Registering…" : "Register"}
         </Button>
+
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          By clicking Register, you agree to our <TermsDialog />
+        </p>
       </form>
 
-      <p className="mt-4 text-center text-sm text-muted-foreground">
+      <p className="mt-4 text-center text-xs text-muted-foreground">
         Already have an account?{" "}
         <Link
           href="/login"
           className="font-medium text-foreground hover:underline"
         >
-          Sign in
+          Sign in here
         </Link>
       </p>
     </AuthCard>

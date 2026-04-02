@@ -27,7 +27,7 @@ export function AppBranding({ variant = "light" }: AppBrandingProps) {
       <p
         className={cn(
           "mt-1.5 text-xs",
-          isDark ? "text-zinc-700" : "text-muted-foreground",
+          isDark ? "text-zinc-500" : "text-muted-foreground",
         )}
       >
         Track, prioritize, and ship — effortlessly.

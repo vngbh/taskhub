@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme inline {
+  --font-sans: var(--font-comfortaa), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-comfortaa), ui-monospace, monospace;
+}
+
 @layer base {
   :root {
     --radius: 0.625rem;

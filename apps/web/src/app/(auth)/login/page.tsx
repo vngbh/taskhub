@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthCard } from "@/components/custom/AuthCard";
+import { TermsDialog } from "@/components/custom/TermsDialog";
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState(login, undefined);
@@ -48,16 +49,20 @@ export default function LoginPage() {
           {pending ? "Signing in…" : "Sign in"}
         </Button>
       </form>
-
-      <p className="mt-4 text-center text-sm text-muted-foreground">
-        No account?{" "}
-        <Link
-          href="/register"
-          className="font-medium text-foreground hover:underline"
-        >
-          Register
-        </Link>
-      </p>
+      <div className="mt-8">
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          By clicking Sign in, you agree to our <TermsDialog />
+        </p>
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/register"
+            className="font-medium text-foreground hover:underline"
+          >
+            Register here
+          </Link>
+        </p>
+      </div>
     </AuthCard>
   );
 }
