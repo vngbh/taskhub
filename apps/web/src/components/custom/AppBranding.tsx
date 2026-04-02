@@ -11,7 +11,7 @@ export function AppBranding({ variant = "light" }: AppBrandingProps) {
     <div className="flex flex-col items-center text-center">
       <Image
         src="/logo.svg"
-        alt="TaskHub logo"
+        alt="taskhub logo"
         width={80}
         height={80}
         className={isDark ? "invert" : "dark:invert"}
@@ -22,7 +22,7 @@ export function AppBranding({ variant = "light" }: AppBrandingProps) {
           isDark && "text-white",
         )}
       >
-        TaskHub
+        taskhub
       </h1>
       <p
         className={cn(

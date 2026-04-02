@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TaskHub",
+  title: "taskhub",
   description: "Personal task management — track, prioritize, and ship.",
 };
 

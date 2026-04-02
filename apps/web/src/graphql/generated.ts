@@ -179,20 +179,6 @@ export type User = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-export type CreateTaskMutationVariables = Exact<{
-  input: CreateTaskInput;
-}>;
-
-
-export type CreateTaskMutation = { __typename?: 'Mutation', createTask: { __typename?: 'Task', id: string } };
-
-export type DeleteTaskMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask: boolean };
-
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
@@ -207,6 +193,30 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthPayload', accessToken: string, user: { __typename?: 'User', id: string, email: string, name: string, role: Role } } };
 
+export type GetTasksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTasksQuery = { __typename?: 'Query', tasks: Array<{ __typename?: 'Task', id: string, title: string, description?: string | null, status: TaskStatus, priority: Priority, deadline?: any | null, createdAt: any }> };
+
+export type GetTaskStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTaskStatsQuery = { __typename?: 'Query', taskStats: { __typename?: 'TaskStats', total: number, todo: number, inProgress: number, done: number, overdue: number } };
+
+export type CreateTaskMutationVariables = Exact<{
+  input: CreateTaskInput;
+}>;
+
+
+export type CreateTaskMutation = { __typename?: 'Mutation', createTask: { __typename?: 'Task', id: string } };
+
+export type DeleteTaskMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask: boolean };
+
 export type UpdateTaskStatusMutationVariables = Exact<{
   input: UpdateTaskStatusInput;
 }>;
@@ -214,29 +224,7 @@ export type UpdateTaskStatusMutationVariables = Exact<{
 
 export type UpdateTaskStatusMutation = { __typename?: 'Mutation', updateTaskStatus: { __typename?: 'Task', id: string } };
 
-export type GetTaskStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
-
-export type GetTaskStatsQuery = { __typename?: 'Query', taskStats: { __typename?: 'TaskStats', total: number, todo: number, inProgress: number, done: number, overdue: number } };
-
-export type GetTasksQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetTasksQuery = { __typename?: 'Query', tasks: Array<{ __typename?: 'Task', id: string, title: string, description?: string | null, status: TaskStatus, priority: Priority, deadline?: any | null, createdAt: any }> };
-
-
-export const CreateTaskDocument = gql`
-    mutation CreateTask($input: CreateTaskInput!) {
-  createTask(input: $input) {
-    id
-  }
-}
-    `;
-export const DeleteTaskDocument = gql`
-    mutation DeleteTask($id: ID!) {
-  deleteTask(id: $id)
-}
-    `;
 export const LoginDocument = gql`
     mutation Login($input: LoginInput!) {
   login(input: $input) {
@@ -263,10 +251,16 @@ export const RegisterDocument = gql`
   }
 }
     `;
-export const UpdateTaskStatusDocument = gql`
-    mutation UpdateTaskStatus($input: UpdateTaskStatusInput!) {
-  updateTaskStatus(input: $input) {
+export const GetTasksDocument = gql`
+    query GetTasks {
+  tasks {
     id
+    title
+    description
+    status
+    priority
+    deadline
+    createdAt
   }
 }
     `;
@@ -281,16 +275,22 @@ export const GetTaskStatsDocument = gql`
   }
 }
     `;
-export const GetTasksDocument = gql`
-    query GetTasks {
-  tasks {
+export const CreateTaskDocument = gql`
+    mutation CreateTask($input: CreateTaskInput!) {
+  createTask(input: $input) {
     id
-    title
-    description
-    status
-    priority
-    deadline
-    createdAt
+  }
+}
+    `;
+export const DeleteTaskDocument = gql`
+    mutation DeleteTask($id: ID!) {
+  deleteTask(id: $id)
+}
+    `;
+export const UpdateTaskStatusDocument = gql`
+    mutation UpdateTaskStatus($input: UpdateTaskStatusInput!) {
+  updateTaskStatus(input: $input) {
+    id
   }
 }
     `;
@@ -302,26 +302,26 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    CreateTask(variables: CreateTaskMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateTaskMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateTaskMutation>({ document: CreateTaskDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateTask', 'mutation', variables);
-    },
-    DeleteTask(variables: DeleteTaskMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteTaskMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteTaskMutation>({ document: DeleteTaskDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteTask', 'mutation', variables);
-    },
     Login(variables: LoginMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<LoginMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<LoginMutation>({ document: LoginDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Login', 'mutation', variables);
     },
     Register(variables: RegisterMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<RegisterMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<RegisterMutation>({ document: RegisterDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Register', 'mutation', variables);
     },
-    UpdateTaskStatus(variables: UpdateTaskStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateTaskStatusMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateTaskStatusMutation>({ document: UpdateTaskStatusDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateTaskStatus', 'mutation', variables);
+    GetTasks(variables?: GetTasksQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetTasksQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTasksQuery>({ document: GetTasksDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetTasks', 'query', variables);
     },
     GetTaskStats(variables?: GetTaskStatsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetTaskStatsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTaskStatsQuery>({ document: GetTaskStatsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetTaskStats', 'query', variables);
     },
-    GetTasks(variables?: GetTasksQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetTasksQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetTasksQuery>({ document: GetTasksDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetTasks', 'query', variables);
+    CreateTask(variables: CreateTaskMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateTaskMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateTaskMutation>({ document: CreateTaskDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateTask', 'mutation', variables);
+    },
+    DeleteTask(variables: DeleteTaskMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteTaskMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteTaskMutation>({ document: DeleteTaskDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteTask', 'mutation', variables);
+    },
+    UpdateTaskStatus(variables: UpdateTaskStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateTaskStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateTaskStatusMutation>({ document: UpdateTaskStatusDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateTaskStatus', 'mutation', variables);
     }
   };
 }
