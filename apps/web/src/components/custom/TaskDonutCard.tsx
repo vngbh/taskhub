@@ -37,7 +37,9 @@ export function TaskDonutCard({
           className="mx-auto aspect-square max-h-52 [&_.recharts-text]:fill-foreground"
         >
           <PieChart>
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartTooltip
+              content={(props) => <ChartTooltipContent {...props} />}
+            />
             <Pie
               data={data}
               dataKey="value"

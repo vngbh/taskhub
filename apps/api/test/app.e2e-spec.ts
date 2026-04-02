@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
+import type { App as SupertestApp } from 'supertest/types';
 import { AppModule } from '@/app.module';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Priority, TaskStatus } from '@/tasks/entities/task.entity';
@@ -170,7 +171,7 @@ describe('GraphQL auth + tasks (e2e)', () => {
     variables?: Record<string, unknown>,
     token?: string,
   ) {
-    const req = request(app.getHttpServer())
+    const req = request(app.getHttpServer() as SupertestApp)
       .post('/graphql')
       .send({ query, variables });
     if (token) {

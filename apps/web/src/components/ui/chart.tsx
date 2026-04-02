@@ -3,11 +3,11 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import {
+  type DefaultLegendContentProps,
   Legend as RechartsLegend,
   ResponsiveContainer,
   Tooltip as RechartsTooltip,
-  type LegendProps,
-  type TooltipProps,
+  type TooltipContentProps,
 } from "recharts";
 
 export type ChartConfig = Record<
@@ -71,7 +71,7 @@ function ChartLegendContent({
   nameKey,
   className,
 }: {
-  payload?: LegendProps["payload"];
+  payload?: DefaultLegendContentProps["payload"];
   nameKey?: string;
   className?: string;
 }) {
@@ -111,7 +111,7 @@ function ChartTooltipContent({
   active,
   payload,
   hideLabel = false,
-}: TooltipProps<number, string> & { hideLabel?: boolean }) {
+}: TooltipContentProps & { hideLabel?: boolean }) {
   const { config } = useChart();
 
   if (!active || !payload?.length) return null;
