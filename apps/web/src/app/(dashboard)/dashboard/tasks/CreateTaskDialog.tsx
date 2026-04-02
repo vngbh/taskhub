@@ -37,7 +37,7 @@ export function CreateTaskDialog() {
 
       <dialog
         ref={dialogRef}
-        className="w-full max-w-md rounded-xl border bg-card text-card-foreground shadow-xl backdrop:bg-black/50 p-0"
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-xl border bg-card text-card-foreground shadow-xl backdrop:bg-black/50 p-0 m-0"
       >
         <div className="p-6">
           <h2 className="text-lg font-semibold mb-1">New task</h2>

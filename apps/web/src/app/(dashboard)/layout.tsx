@@ -1,6 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { logout } from "@/app/actions/auth";
-import { NavLinks } from "./NavLinks";
+import { NavLinks } from "@/app/(dashboard)/NavLinks";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardLayout({
@@ -13,7 +14,7 @@ export default function DashboardLayout({
       <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
           <div className="flex items-center gap-5">
-            <div className="flex items-center gap-2">
+            <Link href="/dashboard" className="flex items-center gap-2">
               <Image
                 src="/logo.svg"
                 alt="TaskHub logo"
@@ -25,7 +26,7 @@ export default function DashboardLayout({
               <span className="text-sm font-semibold tracking-tight">
                 TaskHub
               </span>
-            </div>
+            </Link>
             <NavLinks />
           </div>
           <form action={logout}>
