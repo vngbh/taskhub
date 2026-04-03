@@ -107,7 +107,7 @@ enum TaskStatus {
 }
 
 input UpdateTaskInput {
-  deadline: String
+  deadline: DateTime
   description: String
   id: ID!
   priority: Priority

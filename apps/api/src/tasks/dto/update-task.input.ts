@@ -36,7 +36,7 @@ export class UpdateTaskInput {
   @IsEnum(Priority)
   priority?: Priority;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   @ValidateIf((o) => o.deadline !== null)
   @IsOptional()
   @IsDate()
