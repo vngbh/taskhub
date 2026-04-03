@@ -24,6 +24,7 @@ RUN apk add --no-cache openssl
 WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY apps/api/prisma ./apps/api/prisma
 COPY apps/api/tsconfig.json ./apps/api/tsconfig.json
@@ -34,7 +35,7 @@ EXPOSE 4000
 
 WORKDIR /app/apps/api
 
-CMD ["sh", "-c", "/app/node_modules/.bin/prisma migrate deploy && node dist/src/main"]
+CMD ["sh", "-c", "/app/node_modules/.bin/prisma migrate deploy && node dist/src/main.js"]
 
 WORKDIR /app/apps/api
 
