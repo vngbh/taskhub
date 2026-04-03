@@ -37,6 +37,6 @@ export class UpdateTaskInput {
 
   @Field(() => String, { nullable: true })
   @IsOptional()
-  @IsDateString()
+  @IsDate()
   deadline?: Date | null;
 }

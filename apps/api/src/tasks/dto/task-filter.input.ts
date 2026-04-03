@@ -1,5 +1,5 @@
 import { InputType, Field, registerEnumType } from '@nestjs/graphql';
-import { IsEnum, IsOptional, IsDateString } from 'class-validator';
+import { IsEnum, IsOptional, IsDate } from 'class-validator';
 import { TaskStatus } from '@/tasks/entities/task.entity';
 import { Priority } from '@/tasks/entities/task.entity';
 
@@ -32,12 +32,12 @@ export class TaskFilterInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsDateString()
+  @IsDate()
   deadlineBefore?: Date;
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsDateString()
+  @IsDate()
   deadlineAfter?: Date;
 
   @Field(() => SortBy, { nullable: true })

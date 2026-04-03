@@ -62,11 +62,8 @@ export async function updateTask(
 
   const id = formData.get("id") as string;
   const title = (formData.get("title") as string)?.trim();
-  const description =
-    ((formData.get("description") as string)?.trim() || null) as
-      | string
-      | null
-      | undefined;
+  const description = ((formData.get("description") as string)?.trim() ||
+    null) as string | null | undefined;
   const priority = ((formData.get("priority") as string) || undefined) as
     | Priority
     | undefined;

@@ -4,7 +4,7 @@ import {
   IsOptional,
   MaxLength,
   IsEnum,
-  IsDateString,
+  IsDate,
 } from 'class-validator';
 import { Priority, TaskStatus } from '@/tasks/entities/task.entity';
 
@@ -32,6 +32,6 @@ export class CreateTaskInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsDateString()
+  @IsDate()
   deadline?: Date;
 }
