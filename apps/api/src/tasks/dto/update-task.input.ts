@@ -5,6 +5,7 @@ import {
   MaxLength,
   IsEnum,
   IsDate,
+  ValidateIf,
 } from 'class-validator';
 import { Priority, TaskStatus } from '@/tasks/entities/task.entity';
 
@@ -36,6 +37,7 @@ export class UpdateTaskInput {
   priority?: Priority;
 
   @Field(() => String, { nullable: true })
+  @ValidateIf((o) => o.deadline !== null)
   @IsOptional()
   @IsDate()
   deadline?: Date | null;

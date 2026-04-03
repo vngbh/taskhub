@@ -73,7 +73,7 @@ export async function updateTask(
   const deadlineRaw = formData.get("deadline") as string | null;
   const deadline = deadlineRaw
     ? (new Date(deadlineRaw).toISOString() as unknown as Date)
-    : null;
+    : (null as unknown as Date | null | undefined);
 
   if (!id) return { error: "Task ID is required." };
   if (!title) return { error: "Title is required." };
@@ -82,8 +82,9 @@ export async function updateTask(
     await getSdkClient(token).UpdateTask({
       input: { id, title, description, priority, status, deadline },
     });
-  } catch {
-    return { error: "Failed to update task." };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { error: msg || "Failed to update task." };
   }
 
   revalidatePath("/dashboard/tasks");
