@@ -30,8 +30,9 @@ export async function createTask(
     await getSdkClient(token).CreateTask({
       input: { title, description, priority, deadline },
     });
-  } catch {
-    return { error: "Failed to create task." };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { error: msg || "Failed to create task." };
   }
 
   revalidatePath("/dashboard/tasks");
