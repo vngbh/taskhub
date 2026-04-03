@@ -3,17 +3,17 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 @ObjectType()
 export class TaskStats {
   @Field(() => Int)
-  total!: number;
+  total: number;
 
   @Field(() => Int)
-  todo!: number;
+  todo: number;
 
   @Field(() => Int)
-  inProgress!: number;
+  inProgress: number;
 
   @Field(() => Int)
-  done!: number;
+  done: number;
 
   @Field(() => Int)
-  overdue!: number;
+  overdue: number;
 }

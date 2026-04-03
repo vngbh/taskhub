@@ -4,8 +4,8 @@ import { TaskStatus } from '@/tasks/entities/task.entity';
 @InputType()
 export class UpdateTaskStatusInput {
   @Field(() => ID)
-  id!: string;
+  id: string;
 
   @Field(() => TaskStatus)
-  status!: TaskStatus;
+  status: TaskStatus;
 }

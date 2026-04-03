@@ -18,29 +18,29 @@ registerEnumType(Priority, { name: 'Priority' });
 @ObjectType()
 export class Task {
   @Field(() => ID)
-  id!: string;
+  id: string;
 
   @Field()
-  title!: string;
+  title: string;
 
   @Field({ nullable: true })
   description?: string;
 
   @Field(() => TaskStatus)
-  status!: TaskStatus;
+  status: TaskStatus;
 
   @Field(() => Priority)
-  priority!: Priority;
+  priority: Priority;
 
   @Field({ nullable: true })
   deadline?: Date;
 
   @Field()
-  userId!: string;
+  userId: string;
 
   @Field()
-  createdAt!: Date;
+  createdAt: Date;
 
   @Field()
-  updatedAt!: Date;
+  updatedAt: Date;
 }

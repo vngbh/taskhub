@@ -4,7 +4,7 @@ import { Priority, TaskStatus } from '@/tasks/entities/task.entity';
 @InputType()
 export class UpdateTaskInput {
   @Field(() => ID)
-  id!: string;
+  id: string;
 
   @Field({ nullable: true })
   title?: string;
