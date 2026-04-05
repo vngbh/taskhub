@@ -5,22 +5,31 @@ const encodedKey = new TextEncoder().encode(
   process.env.JWT_SECRET ?? "super-secret-change-in-production",
 );
 
+const TOKEN_COOKIE = "taskhub_token";
+const EXPIRES_COOKIE = "taskhub_expires";
 const PUBLIC_PATHS = ["/login", "/register"];
 
-export async function middleware(request: NextRequest) {
+function clearSessionCookies(response: NextResponse) {
+  response.cookies.delete(TOKEN_COOKIE);
+  response.cookies.delete(EXPIRES_COOKIE);
+}
+
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("taskhub_token")?.value;
+  const token = request.cookies.get(TOKEN_COOKIE)?.value;
 
   const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
 
   if (isPublic) {
-    // Already logged in → redirect to dashboard
     if (token) {
       try {
         await jwtVerify(token, encodedKey, { algorithms: ["HS256"] });
         return NextResponse.redirect(new URL("/dashboard", request.url));
       } catch {
-        // invalid token, let through
+        // Expired / invalid token — clear stale cookies then let through
+        const response = NextResponse.next();
+        clearSessionCookies(response);
+        return response;
       }
     }
     return NextResponse.next();
@@ -36,7 +45,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   } catch {
     const response = NextResponse.redirect(new URL("/login", request.url));
-    response.cookies.delete("taskhub_token");
+    clearSessionCookies(response);
     return response;
   }
 }

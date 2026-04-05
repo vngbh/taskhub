@@ -4,6 +4,7 @@ import { NavLinks } from "@/app/(dashboard)/_components/NavLinks";
 import { getSession } from "@/lib/session";
 import { getSdkClient } from "@/lib/graphql";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { SessionWatcher } from "@/components/shared/SessionWatcher";
 
 export default async function DashboardLayout({
   children,
@@ -61,6 +62,7 @@ export default async function DashboardLayout({
           </Link>
         </div>
       </header>
+      <SessionWatcher />
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
         {children}
       </main>
