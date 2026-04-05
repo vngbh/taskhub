@@ -10,10 +10,10 @@ A full-stack task management application built as a Turborepo monorepo. Users ca
 
 **Test with demo credentials:**
 
-| Field | Value |
-|-------|-------|
-| Email | `admin@taskhub.dev` |
-| Password | `Password123!` |
+| Field    | Value               |
+| -------- | ------------------- |
+| Email    | `admin@taskhub.dev` |
+| Password | `Password123!`      |
 
 ---
 

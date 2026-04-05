@@ -193,6 +193,7 @@ Why this is needed.
 
 Rules:
 
+- Issue title MUST use Title Case (capitalize first letter of each word)
 - Acceptance Criteria MUST be testable
 - Avoid vague wording like "improve UX" — be measurable
 - Keep issue focused on ONE problem or feature
