@@ -9,6 +9,7 @@ A full-stack task management application built as a Turborepo monorepo. Users ca
 - [taskhub](#taskhub)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
+  - [Live Demo](#live-demo)
   - [Tech Stack](#tech-stack)
     - [API (`apps/api`)](#api-appsapi)
     - [Web (`apps/web`)](#web-appsweb)
@@ -40,6 +41,21 @@ taskhub lets each authenticated user maintain their own task list. Key capabilit
 | Dashboard stats     | Four donut charts — total breakdown by status and by priority per status                                         |
 | Profile page        | View account info and sign out                                                                                   |
 | Route protection    | Middleware guards all `/dashboard` routes; authenticated users are redirected away from `/login` and `/register` |
+
+---
+
+## Live Demo
+
+**Deployed application:** https://taskhub-web-seven.vercel.app/
+
+You can test the app immediately with these demo credentials:
+
+| Field | Value |
+|-------|-------|
+| Email | `admin@taskhub.dev` |
+| Password | `Password123!` |
+
+> Features: create/edit/delete tasks, filter by status/priority, sort, paginate, view dashboard stats, auto-signout after token expires.
 
 ---
 
