@@ -38,6 +38,7 @@ A full-stack task management application built as a Turborepo monorepo. Users ca
   - [Scripts Reference](#scripts-reference)
   - [Testing](#testing)
   - [Architecture Notes](#architecture-notes)
+  - [Deployment Notes](#deployment-notes)
 
 ---
 
@@ -324,3 +325,13 @@ The API e2e suite in `apps/api/test/app.e2e-spec.ts` boots the full NestJS appli
 | `components/shared/`           | Cross-feature utilities (`DatePicker`, `FormError`) |
 | `app/(auth)/_components/`      | Auth-flow-only components                           |
 | `app/(dashboard)/_components/` | Dashboard feature components                        |
+
+---
+
+## Deployment Notes
+
+The application is deployed using the following platforms:
+
+- **Supabase**: Used as the database platform, replacing Neon. This change eliminates the issue of login failures caused by Neon’s Scale-to-Zero feature. However, since Supabase is on a free plan, the server may become inactive after 7 days of inactivity. If you encounter login issues, please contact `vngiabaohoang@gmail.com` to resume the project.
+- **Render**: Hosts the backend API.
+- **Vercel**: Hosts the frontend application.
