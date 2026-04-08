@@ -7,7 +7,8 @@
     },
     "build": {
       "dependsOn": ["^build", "^db:generate"],
-      "outputs": [".next/**", "dist/**"]
+      "outputs": [".next/**", "dist/**"],
+      "env": ["JWT_SECRET", "DATABASE_URL", "DIRECT_URL"]
     },
     "lint": {},
     "test": {},
