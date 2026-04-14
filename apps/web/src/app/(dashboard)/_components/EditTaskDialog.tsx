@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/shared/DatePicker";
 import { RequiredBadge } from "@/components/shared/RequiredBadge";
+import { FormError } from "@/components/shared/FormError";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -168,9 +169,7 @@ export function EditTaskDialog({
             </div>
           </div>
 
-          {state?.error && (
-            <p className="text-sm text-destructive">{state.error}</p>
-          )}
+          <FormError message={state?.error} />
 
           <div className="flex justify-end gap-3 pt-2">
             <Button
