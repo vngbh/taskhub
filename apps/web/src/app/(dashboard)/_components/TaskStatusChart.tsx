@@ -137,15 +137,15 @@ export function TaskStatusChart({
           chartConfig={chartConfig}
         />
         <TaskDonutCard
-          title="In Progress"
-          total={inProgressTotal}
-          data={inProgressData}
-          chartConfig={chartConfig}
-        />
-        <TaskDonutCard
           title="To Do"
           total={todoTotal}
           data={todoData}
+          chartConfig={chartConfig}
+        />
+        <TaskDonutCard
+          title="In Progress"
+          total={inProgressTotal}
+          data={inProgressData}
           chartConfig={chartConfig}
         />
         <TaskDonutCard
