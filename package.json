@@ -15,7 +15,9 @@
       "**/@nestjs/graphql",
       "**/@nestjs/graphql/**",
       "**/graphql",
-      "**/graphql/**"
+      "**/graphql/**",
+      "**/graphql-tag",
+      "**/graphql-tag/**"
     ]
   },
   "scripts": {
