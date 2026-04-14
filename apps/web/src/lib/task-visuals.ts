@@ -16,7 +16,7 @@ export const TASK_STATUS_VISUAL = {
 export const TASK_PRIORITY_VISUAL = {
   LOW: {
     label: "Low",
-    color: "#94a3b8",
+    color: "#a39e98",
   },
   MEDIUM: {
     label: "Medium",

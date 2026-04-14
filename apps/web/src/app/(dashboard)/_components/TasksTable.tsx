@@ -4,11 +4,6 @@ import { useMemo, useState, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   Circle,
-  CircleCheck,
-  Clock3,
-  ArrowUp,
-  ArrowRight,
-  ArrowDown,
   Search,
   SlidersHorizontal,
   MoreHorizontal,
@@ -65,47 +60,29 @@ type Task = GetTasksQuery["tasks"][number];
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50];
 
-// ─── Icons ───────────────────────────────────────────────────────────────────
-
-const STATUS_ICON: Record<string, React.ElementType> = {
-  TODO: Circle,
-  IN_PROGRESS: Clock3,
-  DONE: CircleCheck,
-};
-
-const PRIORITY_ICON: Record<string, React.ElementType> = {
-  LOW: ArrowDown,
-  MEDIUM: ArrowRight,
-  HIGH: ArrowUp,
-};
-
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
 function StatusCell({ status }: { status: string }) {
-  const Icon = STATUS_ICON[status] ?? Circle;
   const visual = TASK_STATUS_VISUAL[status as TaskStatusVisualKey];
   return (
-    <div
-      className="flex items-center gap-2 text-sm"
-      style={{ color: visual?.color }}
+    <span
+      className="inline-flex items-center justify-center rounded px-2.5 py-0.5 text-xs font-medium text-white"
+      style={{ backgroundColor: visual?.color }}
     >
-      <Icon className="h-4 w-4 shrink-0" />
-      <span>{visual?.label ?? status}</span>
-    </div>
+      {visual?.label ?? status}
+    </span>
   );
 }
 
 function PriorityCell({ priority }: { priority: string }) {
-  const Icon = PRIORITY_ICON[priority] ?? ArrowRight;
   const visual = TASK_PRIORITY_VISUAL[priority as TaskPriorityVisualKey];
   return (
-    <div
-      className="flex items-center gap-2 text-sm"
-      style={{ color: visual?.color }}
+    <span
+      className="inline-flex items-center justify-center rounded px-2.5 py-0.5 text-xs font-medium text-white"
+      style={{ backgroundColor: visual?.color }}
     >
-      <Icon className="h-4 w-4 shrink-0" />
-      <span>{visual?.label ?? priority}</span>
-    </div>
+      {visual?.label ?? priority}
+    </span>
   );
 }
 

@@ -131,6 +131,48 @@ Rules:
 - Never call API endpoints directly from client components.
 - Server Components fetch data; Client Components handle interaction.
 
+## Design Tokens
+
+The color system uses a warm neutral palette. All token values live in `globals.css`; task-specific colors live in `lib/task-visuals.ts`.
+
+### Global palette (key tokens)
+
+| Token | Value | Role |
+|-------|-------|------|
+| `--background` | `oklch(1 0 0)` | Pure white page canvas |
+| `--foreground` | `oklch(0.09 0.008 65)` | Near-black with warm hue |
+| `--secondary` / `--muted` / `--accent` | `oklch(0.97 0.006 75)` | Warm white surface — yellow-brown undertone |
+| `--primary` | `oklch(0.52 0.18 247)` | Blue `#0075de` — the only saturated UI accent |
+| `--border` | `oklch(0 0 0 / 10%)` | Whisper border — ultra-thin, barely visible |
+| `--input` | `oklch(0.88 0 0)` | `#dddddd` input border |
+| `--destructive` | `oklch(0.55 0.22 25)` | Warm red for error/delete states |
+| `--radius` | `0.25rem` (4px) | Tight radius applied to all shadcn components |
+
+### Task visual colors (`lib/task-visuals.ts`)
+
+Status badges:
+
+| Status | Color | Hex |
+|--------|-------|-----|
+| Todo | Warm gray | `#a39e98` |
+| In Progress | Blue | `#0075de` |
+| Done | Green | `#1aae39` |
+
+Priority badges:
+
+| Priority | Color | Hex |
+|----------|-------|-----|
+| Low | Warm gray | `#a39e98` |
+| Medium | Orange | `#dd5b00` |
+| High | Red | `#e03131` |
+
+Rules:
+
+- NEVER add a new saturated color to the UI chrome — use CSS tokens only.
+- Status and priority chips are solid color badges with white centered text (`text-white font-medium`).
+- When adding a new task state or priority level, add its visual to `task-visuals.ts` following the warm neutral palette above; do not introduce colors outside this palette.
+- Dark mode mirrors the same palette with a warm dark brown-gray background (`oklch(0.24 0.010 65)`).
+
 ## Tailwind and UI Rules
 
 - Use design tokens from Tailwind config. No arbitrary values unless genuinely unavoidable.
