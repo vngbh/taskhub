@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthCard } from "@/app/(auth)/_components/AuthCard";
 import { TermsDialog } from "@/app/(auth)/_components/TermsDialog";
-import { FormError, FieldError } from "@/components/shared/FormError";
+import { FieldError } from "@/components/shared/FormError";
 import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
@@ -71,7 +71,7 @@ export default function LoginPage() {
           <FieldError message={fieldErrors.password} />
         </div>
 
-        <FormError message={state?.error} />
+        <FieldError message={state?.error} />
 
         <Button type="submit" disabled={pending} className="mt-2 w-full">
           {pending ? "Signing in…" : "Sign in"}

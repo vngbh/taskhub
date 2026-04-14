@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { AuthCard } from "@/app/(auth)/_components/AuthCard";
 import { TermsDialog } from "@/app/(auth)/_components/TermsDialog";
-import { FormError, FieldError } from "@/components/shared/FormError";
+import { FieldError } from "@/components/shared/FormError";
 
 const RULES = [
   {
@@ -210,7 +210,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Server error */}
-        <FormError message={state?.error} />
+        <FieldError message={state?.error} />
 
         <Button type="submit" disabled={pending} className="mt-2 w-full">
           {pending ? "Registering…" : "Register"}
