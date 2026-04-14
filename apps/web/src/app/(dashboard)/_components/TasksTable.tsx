@@ -49,7 +49,7 @@ import {
 
 import { CreateTaskDialog } from "@/app/(dashboard)/_components/CreateTaskDialog";
 import { EditTaskDialog } from "@/app/(dashboard)/_components/EditTaskDialog";
-import { deleteTask } from "@/app/actions/tasks";
+import { deleteTask, deleteTasks } from "@/app/actions/tasks";
 import { cn } from "@/lib/utils";
 import {
   TASK_PRIORITY_VISUAL,
@@ -229,6 +229,15 @@ export function TasksTable({ tasks, total, page, pageSize }: TasksTableProps) {
     startTransition(() => deleteTask(id));
   }
 
+  function handleDeleteSelected() {
+    const ids = Array.from(selected);
+    if (!confirm(`Delete ${ids.length} selected task${ids.length > 1 ? "s" : ""}?`)) return;
+    startTransition(async () => {
+      await deleteTasks(ids);
+      setSelected(new Set());
+    });
+  }
+
   // ── Pagination ─────────────────────────────────────────────────────────────
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -289,7 +298,20 @@ export function TasksTable({ tasks, total, page, pageSize }: TasksTableProps) {
             </Select>
           </div>
 
-          <CreateTaskDialog />
+          {selected.size > 0 ? (
+            <Button
+              variant="destructive"
+              size="sm"
+              disabled={isPending}
+              onClick={handleDeleteSelected}
+              className="shrink-0"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete {selected.size} selected
+            </Button>
+          ) : (
+            <CreateTaskDialog />
+          )}
         </div>
 
         {/* ── Table ── */}

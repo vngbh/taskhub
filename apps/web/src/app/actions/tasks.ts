@@ -53,6 +53,17 @@ export async function deleteTask(id: string) {
   revalidatePath("/dashboard");
 }
 
+export async function deleteTasks(ids: string[]) {
+  const token = await getSession();
+  if (!token) return;
+
+  const sdk = getSdkClient(token);
+  await Promise.allSettled(ids.map((id) => sdk.DeleteTask({ id })));
+
+  revalidatePath("/dashboard/tasks");
+  revalidatePath("/dashboard");
+}
+
 export async function updateTask(
   _state: TaskFormState,
   formData: FormData,
