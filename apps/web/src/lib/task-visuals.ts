@@ -1,15 +1,15 @@
 export const TASK_STATUS_VISUAL = {
   TODO: {
     label: "Todo",
-    color: "#a5b4fc",
+    color: "#a39e98",
   },
   IN_PROGRESS: {
     label: "In Progress",
-    color: "#93c5fd",
+    color: "#0075de",
   },
   DONE: {
     label: "Done",
-    color: "#6ee7b7",
+    color: "#1aae39",
   },
 } as const;
 
@@ -20,11 +20,11 @@ export const TASK_PRIORITY_VISUAL = {
   },
   MEDIUM: {
     label: "Medium",
-    color: "#fcd34d",
+    color: "#dd5b00",
   },
   HIGH: {
     label: "High",
-    color: "#f9a8d4",
+    color: "#e03131",
   },
 } as const;
 
