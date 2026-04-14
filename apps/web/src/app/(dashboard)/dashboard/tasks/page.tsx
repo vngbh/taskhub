@@ -3,6 +3,7 @@ import { getSdkClient } from "@/lib/graphql";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { TasksTable } from "@/app/(dashboard)/_components/TasksTable";
+import { Spinner } from "@/components/ui/spinner";
 import type { GetTasksQuery, TaskFilterInput } from "@/graphql/generated";
 import { Priority, TaskStatus, SortBy, SortOrder } from "@/graphql/generated";
 
@@ -71,7 +72,7 @@ export default async function TasksPage({
         </p>
       </div>
 
-      <Suspense>
+      <Suspense fallback={<div className="flex h-64 items-center justify-center"><Spinner className="h-6 w-6" /></div>}>
         <TasksTable
           tasks={tasks}
           total={total}
