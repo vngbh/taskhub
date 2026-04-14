@@ -6,6 +6,7 @@ import { updateTask, type TaskFormState } from "@/app/actions/tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/shared/DatePicker";
+import { RequiredBadge } from "@/components/shared/RequiredBadge";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -99,8 +100,8 @@ export function EditTaskDialog({
           <input type="hidden" name="id" value={task.id} />
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="et-title">
-              Title <span className="text-destructive">*</span>
+            <Label htmlFor="et-title" className="flex items-center gap-2">
+              Title <RequiredBadge />
             </Label>
             <Input
               id="et-title"

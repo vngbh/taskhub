@@ -6,6 +6,7 @@ import { createTask, type TaskFormState } from "@/app/actions/tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/shared/DatePicker";
+import { RequiredBadge } from "@/components/shared/RequiredBadge";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -64,8 +65,8 @@ export function CreateTaskDialog() {
 
         <form key={formKey} action={formAction} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="ct-title">
-              Title <span className="text-destructive">*</span>
+            <Label htmlFor="ct-title" className="flex items-center gap-2">
+              Title <RequiredBadge />
             </Label>
             <Input
               id="ct-title"
