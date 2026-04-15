@@ -4,7 +4,7 @@ A full-stack task management application built as a Turborepo monorepo. Users ca
 
 ---
 
-## 🚀 Live Demo
+## Live Demo
 
 **Deployed application:** https://taskhub-web-seven.vercel.app/
 
@@ -20,7 +20,7 @@ A full-stack task management application built as a Turborepo monorepo. Users ca
 ## Table of Contents
 
 - [taskhub](#taskhub)
-  - [🚀 Live Demo](#-live-demo)
+  - [Live Demo](#live-demo)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Tech Stack](#tech-stack)
@@ -235,21 +235,21 @@ The schema is auto-generated from NestJS decorators and written to `apps/api/src
 
 | Query                       | Auth | Description                                              |
 | --------------------------- | ---- | -------------------------------------------------------- |
-| `me`                        | ✅   | Return the current user's profile                        |
-| `tasks(filter, skip, take)` | ✅   | Paginated, filtered task list                            |
-| `tasksCount(filter)`        | ✅   | Total count for a given filter                           |
-| `taskStats`                 | ✅   | Aggregate counts: total, todo, inProgress, done, overdue |
+| `me`                        | Yes  | Return the current user's profile                        |
+| `tasks(filter, skip, take)` | Yes  | Paginated, filtered task list                            |
+| `tasksCount(filter)`        | Yes  | Total count for a given filter                           |
+| `taskStats`                 | Yes  | Aggregate counts: total, todo, inProgress, done, overdue |
 
 **Mutations**
 
 | Mutation                  | Auth | Description                                        |
 | ------------------------- | ---- | -------------------------------------------------- |
-| `register(input)`         | ❌   | Create a new account; returns `accessToken` + user |
-| `login(input)`            | ❌   | Authenticate; returns `accessToken` + user         |
-| `createTask(input)`       | ✅   | Create a task owned by the current user            |
-| `updateTask(input)`       | ✅   | Update title, description, priority, deadline      |
-| `updateTaskStatus(input)` | ✅   | Update status only                                 |
-| `deleteTask(id)`          | ✅   | Delete a task (ownership enforced)                 |
+| `register(input)`         | No   | Create a new account; returns `accessToken` + user |
+| `login(input)`            | No   | Authenticate; returns `accessToken` + user         |
+| `createTask(input)`       | Yes  | Create a task owned by the current user            |
+| `updateTask(input)`       | Yes  | Update title, description, priority, deadline      |
+| `updateTaskStatus(input)` | Yes  | Update status only                                 |
+| `deleteTask(id)`          | Yes  | Delete a task (ownership enforced)                 |
 
 All authenticated operations require a `Authorization: Bearer <token>` header.
 

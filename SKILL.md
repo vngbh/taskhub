@@ -15,6 +15,7 @@ Use English across the entire project:
 - Spell the product name as `taskhub` in lowercase everywhere, including headings, user-facing copy, documentation, branch names, and PR titles.
 - Write code identifiers, file names, folders, test names, and fixtures in English.
 - Use English as the default user-facing product copy unless a task is explicitly about localization.
+- Avoid emojis in project documentation, including README files, tables, headings, and generated table of contents entries.
 - If a task finds Vietnamese or any other non-English project text outside an explicit localization context, propose converting it to English in the same PR.
 
 ## Project Structure
